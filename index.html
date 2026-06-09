@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Franks Media Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:#07080a;color:#f0ede8;font-family:'Outfit',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+:root{
+  --surface:#0f1114;--raised:#161a1f;
+  --border:rgba(255,255,255,.08);--border-hi:rgba(255,255,255,.15);
+  --accent:#2563eb;--accent-hi:#3b82f6;
+  --green:#10b981;--amber:#f59e0b;--red:#ef4444;
+  --muted:#6b7280;--text:#f0ede8;--text-dim:#9ca3af;
+}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:4px;}
+
+/* PASSWORD */
+#pw{position:fixed;inset:0;z-index:9999;background:#07080a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;}
+#pw .pwlogo{height:60px;filter:brightness(0) invert(1);}
+#pw h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;}
+#pw p{font-size:14px;color:var(--muted);}
+.pw-row{display:flex;gap:8px;width:100%;max-width:340px;}
+#pwi{flex:1;padding:12px 15px;background:var(--raised);border:1px solid var(--border-hi);border-radius:10px;color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;outline:none;}
+#pwi:focus{border-color:var(--accent-hi);}
+#pwb{padding:12px 18px;background:var(--accent);border:none;border-radius:10px;color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;}
+#pwe{font-size:13px;color:var(--red);height:16px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;background:rgba(7,8,10,.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+.nav-logo img{height:34px;filter:brightness(0) invert(1);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.nav-clock{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);letter-spacing:.02em;min-width:80px;text-align:right;}
+.nav-clock-lbl{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:right;margin-top:1px;}
+.nav-divider{width:1px;height:28px;background:var(--border);}
+.nav-pill{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;}
+.nav-pill.live{border-color:rgba(239,68,68,.4);color:#f87171;background:rgba(239,68,68,.07);}
+.nav-pill.live span{width:6px;height:6px;border-radius:50%;background:#f87171;animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+.nav-saved{font-size:11px;color:var(--muted);transition:color .3s;}
+.nav-saved.ok{color:var(--green);}
+
+/* PAGE */
+.page{padding-top:74px;max-width:1400px;margin:0 auto;padding-left:26px;padding-right:26px;padding-bottom:56px;}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.card-hdr{padding:17px 20px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;}
+.card-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);}
+.card-body{padding:0 20px 20px;}
+.sec-lbl{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:10px;}
+
+/* GRIDS */
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px;}
+.hgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;}
+.gmain{display:grid;grid-template-columns:1fr 355px;gap:18px;align-items:start;}
+@media(max-width:1100px){.gmain{grid-template-columns:1fr;}.g3{grid-template-columns:1fr 1fr;}}
+@media(max-width:680px){.g3,.hgrid{grid-template-columns:1fr;}}
+
+/* STAT CARDS */
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:17px;display:flex;align-items:center;gap:13px;}
+.sc-ico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.ico-b{background:rgba(37,99,235,.14);border:1px solid rgba(37,99,235,.25);}
+.ico-g{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.22);}
+.ico-a{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);}
+.sv{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--text);line-height:1;}
+.sl{font-size:12px;color:var(--text-dim);margin-top:2px;}
+
+/* HOLIDAY COUNTDOWNS */
+.hcard{border-radius:20px;overflow:hidden;position:relative;min-height:200px;display:flex;flex-direction:column;justify-content:flex-end;}
+.hcard-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.hcard-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.4) 50%,rgba(0,0,0,.05) 100%);}
+.hcard-cnt{position:relative;z-index:2;padding:20px 22px;}
+.hcard-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:6px;font-weight:600;}
+.hcard-name{font-family:'Syne',sans-serif;font-size:clamp(16px,2.5vw,22px);font-weight:800;color:#fff;margin-bottom:2px;line-height:1.2;}
+.hcard-dates{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:14px;letter-spacing:.04em;}
+.hnums{display:flex;gap:6px;flex-wrap:wrap;}
+.hnum{background:rgba(0,0,0,.6);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 14px;text-align:center;min-width:54px;}
+.hnum-v{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;line-height:1;}
+.hnum.hot .hnum-v{color:#fbbf24;}
+.hnum.live-hol .hnum-v{color:#34d399;}
+.hnum-u{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:2px;}
+.haway{font-size:13px;font-weight:700;padding:8px 16px;background:rgba(16,185,129,.22);border:1px solid rgba(16,185,129,.45);border-radius:10px;display:inline-block;color:#6ee7b7;letter-spacing:.04em;}
+.hcomplete{font-size:12px;font-weight:600;padding:7px 14px;background:rgba(107,114,128,.15);border:1px solid rgba(107,114,128,.3);border-radius:10px;display:inline-block;color:#9ca3af;}
+.hdest-badge{position:absolute;top:14px;right:14px;z-index:3;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:5px 10px;font-size:10px;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.08em;text-transform:uppercase;}
+
+/* CONTACTS */
+.clist{display:flex;flex-direction:column;gap:6px;max-height:240px;overflow-y:auto;padding:0 20px;}
+.ci-item{display:flex;align-items:center;gap:9px;padding:10px 12px;background:var(--raised);border:1px solid var(--border);border-radius:9px;}
+.ci-item.done{opacity:.5;}
+.ci-item.done .ci-name{text-decoration:line-through;color:var(--muted);}
+.ci-chk{width:19px;height:19px;border-radius:5px;border:1.5px solid var(--border-hi);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;cursor:pointer;transition:all .2s;}
+.ci-item.done .ci-chk{background:var(--green);border-color:var(--green);color:#fff;}
+.ci-name{flex:1;font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ci-type{font-size:11px;color:var(--muted);}
+.ci-del{font-size:14px;color:#222;cursor:pointer;padding:1px 3px;transition:color .2s;}
+.ci-del:hover{color:var(--red);}
+.prow{padding:10px 20px;display:flex;gap:7px;flex-wrap:wrap;}
+.pi{padding:9px 11px;background:var(--raised);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;outline:none;}
+.pi:focus{border-color:rgba(255,255,255,.2);}
+.pi::placeholder{color:#252b38;}
+.psel{padding:9px 10px;background:var(--raised);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;outline:none;}
+.psel option{background:#161a1f;}
+.btn-p{padding:9px 15px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.btn-p:hover{background:var(--accent-hi);}
+.btn-s{padding:5px 10px;background:var(--raised);border:1px solid var(--border);border-radius:6px;color:var(--text-dim);font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;cursor:pointer;}
+.btn-s:hover{color:var(--red);}
+.tnote{width:100%;background:var(--raised);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;line-height:1.7;padding:9px 12px;outline:none;resize:none;min-height:65px;}
+.tnote::placeholder{color:#252b38;}
+.sv-lbl{font-size:11px;color:var(--muted);margin-top:3px;transition:color .3s;}
+.sv-lbl.ok{color:var(--green);}
+
+/* CLIENTS */
+.ctabs{display:flex;gap:5px;padding:0 20px;margin-bottom:12px;flex-wrap:wrap;}
+.ctab{padding:5px 12px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;transition:all .2s;}
+.ctab.on{background:rgba(37,99,235,.15);border-color:rgba(37,99,235,.4);color:var(--accent-hi);}
+.cview{padding:0 20px 20px;}
+.cav-row{display:flex;align-items:center;gap:10px;margin-bottom:13px;padding:11px 13px;background:var(--raised);border:1px solid var(--border);border-radius:10px;}
+.cav{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;}
+.cname{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);}
+.ctype{font-size:11px;color:var(--muted);}
+.cna{width:100%;min-height:160px;background:var(--raised);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;line-height:1.75;padding:11px 13px;outline:none;resize:vertical;}
+.cna:focus{border-color:rgba(37,99,235,.4);}
+.cna::placeholder{color:#252b38;}
+.csp-row{display:flex;gap:5px;margin-bottom:11px;flex-wrap:wrap;}
+.csp{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;}
+.csp.spr{border-color:rgba(245,158,11,.35);color:#fcd34d;background:rgba(245,158,11,.09);}
+.csp.spa{border-color:rgba(37,99,235,.4);color:var(--accent-hi);background:rgba(37,99,235,.12);}
+.csp.spl{border-color:rgba(16,185,129,.4);color:#6ee7b7;background:rgba(16,185,129,.1);}
+.csp.spp{border-color:rgba(107,114,128,.4);color:#9ca3af;background:rgba(107,114,128,.08);}
+
+/* ADD CLIENT MODAL */
+#acm{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);display:none;align-items:center;justify-content:center;padding:16px;}
+#acm.open{display:flex;}
+.acmbox{background:var(--surface);border:1px solid var(--border-hi);border-radius:16px;width:100%;max-width:420px;}
+.acm-hdr{padding:17px 20px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.acm-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--text);}
+.acm-close{background:var(--raised);border:1px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:12px;}
+.acm-body{padding:0 20px 20px;display:flex;flex-direction:column;gap:10px;}
+.fl{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:3px;}
+.fi{width:100%;padding:10px 12px;background:var(--raised);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;outline:none;}
+.fi:focus{border-color:rgba(37,99,235,.5);}
+.fi::placeholder{color:#252b38;}
+.fsel{width:100%;padding:10px 12px;background:var(--raised);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;outline:none;}
+.fsel option{background:#161a1f;}
+
+/* FB GROUPS */
+.ombox{padding:13px;background:linear-gradient(135deg,rgba(37,99,235,.08),rgba(37,99,235,.03));border:1px solid rgba(37,99,235,.2);border-radius:11px;margin-bottom:12px;position:relative;}
+.om-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-hi);margin-bottom:6px;font-weight:600;}
+.om-txt{font-size:13px;line-height:1.75;color:#d1d5db;}
+.om-copy{position:absolute;top:10px;right:10px;padding:5px 11px;background:var(--accent);border:none;border-radius:6px;color:#fff;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;cursor:pointer;}
+.om-copy:hover{background:var(--accent-hi);}
+.om-copy.copied{background:var(--green);}
+.glist{display:flex;flex-direction:column;gap:5px;max-height:240px;overflow-y:auto;margin-bottom:10px;}
+.gi{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--raised);border:1px solid var(--border);border-radius:8px;cursor:pointer;}
+.gi.posted{background:rgba(16,185,129,.05);border-color:rgba(16,185,129,.28);}
+.gi-chk{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border-hi);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
+.gi.posted .gi-chk{background:var(--green);border-color:var(--green);color:#fff;}
+.gi-name{flex:1;font-size:13px;font-weight:500;color:var(--text);}
+.gi.posted .gi-name{color:var(--text-dim);text-decoration:line-through;}
+.gi-time{font-size:10px;color:var(--muted);}
+.gi-del{font-size:14px;color:#222;cursor:pointer;padding:1px 3px;transition:color .2s;}
+.gi-del:hover{color:var(--red);}
+.gpbw{height:4px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden;margin-top:4px;}
+.gpb{height:100%;background:linear-gradient(to right,var(--green),#34d399);border-radius:4px;transition:width .4s;}
+.gadd{display:flex;gap:7px;}
+
+/* GBN */
+.gbnw{background:#0c0e10;border:2px solid rgba(239,68,68,.3);border-radius:13px;overflow:hidden;margin-bottom:12px;}
+.gbn-hdr{background:linear-gradient(90deg,#991b1b,#7f1d1d);padding:9px 14px;display:flex;align-items:center;justify-content:space-between;}
+.gbn-lbl{display:flex;align-items:center;gap:7px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#fff;letter-spacing:.07em;}
+.gbn-dot{width:7px;height:7px;border-radius:50%;background:#fff;animation:blink 1s infinite;}
+.gbn-emb{position:relative;width:100%;padding-top:56.25%;}
+.gbn-emb iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+.gbn-opbtn{padding:5px 10px;background:rgba(255,255,255,.15);border:none;color:#fff;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;border-radius:5px;cursor:pointer;}
+.gbn-opbtn:hover{background:rgba(255,255,255,.25);}
+
+/* GBN HEADLINES */
+.hlst{display:flex;flex-direction:column;gap:5px;}
+.hi-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--raised);border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all .2s;text-decoration:none;}
+.hi-item:hover{border-color:var(--border-hi);background:rgba(255,255,255,.04);}
+.hi-img{width:54px;height:40px;border-radius:6px;object-fit:cover;flex-shrink:0;background:rgba(255,255,255,.06);}
+.hi-info{flex:1;min-width:0;}
+.hi-cat{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#f87171;font-weight:700;margin-bottom:2px;}
+.hi-title{font-size:12px;font-weight:500;color:var(--text);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.hi-time{font-size:10px;color:var(--muted);margin-top:3px;}
+.gbn-load{text-align:center;padding:14px;color:var(--muted);font-size:12px;}
+.gbn-update-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+
+/* GBN FS */
+#gbnfs{position:fixed;inset:0;z-index:9990;background:#000;display:none;flex-direction:column;}
+#gbnfs.open{display:flex;}
+.gbnfs-hdr{background:#991b1b;padding:10px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.gbnfs-lbl{display:flex;align-items:center;gap:7px;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;}
+.gbnfs-close{padding:6px 14px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;border-radius:7px;cursor:pointer;}
+.gbnfs-body{flex:1;position:relative;}
+.gbnfs-body iframe{width:100%;height:100%;border:none;position:absolute;inset:0;}
+
+/* TASKS */
+.qwl{display:flex;flex-direction:column;gap:5px;max-height:190px;overflow-y:auto;}
+.qw-item{display:flex;align-items:center;gap:7px;padding:8px 11px;background:var(--raised);border:1px solid var(--border);border-radius:7px;}
+.qw-item.done{opacity:.5;}
+.qw-item.done .qw-txt{text-decoration:line-through;color:var(--muted);}
+.qw-chk{width:17px;height:17px;border-radius:4px;border:1.5px solid var(--border-hi);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;cursor:pointer;}
+.qw-item.done .qw-chk{background:var(--green);border-color:var(--green);color:#fff;}
+.qw-txt{flex:1;font-size:13px;color:var(--text);cursor:pointer;}
+.qw-del{font-size:13px;color:#222;cursor:pointer;transition:color .2s;}
+.qw-del:hover{color:var(--red);}
+.qw-add{display:flex;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+.qw-in{flex:1;padding:8px 11px;background:var(--raised);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;outline:none;}
+.qw-in::placeholder{color:#252b38;}
+
+/* NOTES */
+.notes-tabs-row{display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+.ntab{padding:5px 12px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;transition:all .2s;}
+.ntab.on{color:var(--text);border-color:var(--border-hi);background:rgba(255,255,255,.06);}
+.ntab-add{padding:5px 10px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid rgba(37,99,235,.3);background:rgba(37,99,235,.08);color:var(--accent-hi);font-family:'Outfit',sans-serif;transition:all .2s;}
+.ntab-add:hover{background:rgba(37,99,235,.16);}
+.gna{width:100%;min-height:120px;background:var(--raised);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;line-height:1.75;padding:10px 12px;outline:none;resize:vertical;}
+.gna::placeholder{color:#252b38;}
+.note-del-btn{font-size:11px;color:var(--muted);cursor:pointer;padding:3px 7px;border:1px solid var(--border);border-radius:5px;background:transparent;font-family:'Outfit',sans-serif;transition:all .2s;}
+.note-del-btn:hover{color:var(--red);border-color:rgba(239,68,68,.35);}
+
+/* WORLD CUP */
+.wc-today-list{display:flex;flex-direction:column;gap:5px;}
+.wcm{display:flex;align-items:center;gap:10px;padding:10px 13px;background:var(--raised);border:1px solid var(--border);border-radius:10px;}
+.wcm.eng{background:rgba(220,38,38,.07);border-color:rgba(220,38,38,.28);}
+.wcm.ko{background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.22);}
+.wcm.fin{background:rgba(16,185,129,.07);border-color:rgba(16,185,129,.25);}
+.wct{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text-dim);min-width:44px;flex-shrink:0;}
+.wcm.eng .wct{color:#fca5a5;}
+.wcteams{flex:1;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.wcteam{font-size:13px;font-weight:600;color:var(--text);}
+.wcvs{font-size:10px;color:var(--muted);font-weight:600;flex-shrink:0;}
+.wcgrp{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--border);padding:2px 7px;border-radius:5px;flex-shrink:0;white-space:nowrap;}
+.wcm.eng .wcgrp{background:rgba(220,38,38,.13);border-color:rgba(220,38,38,.3);color:#fca5a5;}
+.wcm.ko .wcgrp{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.28);color:#fcd34d;}
+.wcm.fin .wcgrp{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:#6ee7b7;}
+.wcven{font-size:10px;color:var(--muted);flex-shrink:0;max-width:110px;text-align:right;line-height:1.35;}
+.wc-eng-b{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;background:rgba(220,38,38,.18);color:#fca5a5;border:1px solid rgba(220,38,38,.35);flex-shrink:0;}
+.wc-no-matches{padding:16px;text-align:center;font-size:13px;color:var(--muted);font-style:italic;}
+@media(max-width:768px){.wcven{display:none;}}
+
+/* ENG BOX */
+.eng-box{padding:10px 13px;background:var(--raised);border:1px solid rgba(220,38,38,.28);border-radius:9px;margin-bottom:7px;}
+.eng-lbl{font-size:10px;color:var(--muted);margin-bottom:2px;}
+.eng-match{font-size:13px;font-weight:600;color:var(--text);margin-bottom:1px;}
+.eng-info{font-size:11px;color:var(--muted);}
+
+/* FOOTER */
+footer{margin-top:32px;padding:13px 26px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin-left:auto;margin-right:auto;flex-wrap:wrap;gap:8px;}
+.footer-logo img{height:26px;filter:brightness(0) invert(1);}
+.ft{font-size:11px;color:var(--muted);}
+.freset{font-size:11px;color:#333;cursor:pointer;text-decoration:underline;}
+.freset:hover{color:var(--red);}
+@media(max-width:768px){nav{padding:0 13px;}.page{padding-left:13px;padding-right:13px;padding-top:68px;}.nav-clock{font-size:15px;}}
+</style>
+</head>
+<body>
+
+<div id="pw">
+  <img class="pwlogo" src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/asset/refs/heads/main/Franks_Media__1_-removebg-preview.png" alt="">
+  <h2>Business Dashboard</h2>
+  <p>Enter your password to access</p>
+  <div class="pw-row">
+    <input id="pwi" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()">
+    <button id="pwb" onclick="checkPw()">Enter &rarr;</button>
+  </div>
+  <div id="pwe"></div>
+</div>
+
+<div id="gbnfs">
+  <div class="gbnfs-hdr">
+    <div class="gbnfs-lbl"><div class="gbn-dot"></div>GB NEWS LIVE</div>
+    <button class="gbnfs-close" onclick="closeGbnFs()">&#x2715; Close</button>
+  </div>
+  <div class="gbnfs-body"><iframe id="gbnfs-iframe" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe></div>
+</div>
+
+<div id="acm">
+  <div class="acmbox">
+    <div class="acm-hdr">
+      <div class="acm-title">Add New Client</div>
+      <button class="acm-close" onclick="closeAcm()">Cancel</button>
+    </div>
+    <div class="acm-body">
+      <div><div class="fl">Business Name</div><input class="fi" id="acm-n" placeholder="e.g. Joe's Barber Shop" maxlength="60"></div>
+      <div><div class="fl">Business Type</div><input class="fi" id="acm-t" placeholder="e.g. Barber, Restaurant..." maxlength="50"></div>
+      <div><div class="fl">Status</div>
+        <select class="fsel" id="acm-s">
+          <option value="prospect">Prospect</option>
+          <option value="active">Active</option>
+          <option value="live">Live</option>
+          <option value="paused">Paused</option>
+        </select>
+      </div>
+      <div><div class="fl">Notes</div><textarea class="fi" id="acm-no" placeholder="Initial notes..." rows="3" style="resize:vertical;"></textarea></div>
+      <button class="btn-p" style="width:100%;padding:11px;" onclick="addClient()">Add Client &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-logo"><img src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/asset/refs/heads/main/Franks_Media__1_-removebg-preview.png" alt="Franks Media"></div>
+  <div class="nav-right">
+    <div>
+      <div class="nav-clock" id="nav-clock">00:00:00</div>
+      <div class="nav-clock-lbl">BST</div>
+    </div>
+    <div class="nav-divider"></div>
+    <span class="nav-saved" id="nav-saved">Auto-saving</span>
+    <div class="nav-divider"></div>
+    <button class="nav-pill live" onclick="openGbnFs()"><span></span>GB News</button>
+  </div>
+</nav>
+
+<div class="page" id="main-page" style="display:none;">
+
+  <!-- HOLIDAYS -->
+  <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:12px;color:var(--text);">&#x2708;&#xFE0F; Upcoming Trips</div>
+  <div class="hgrid">
+    <div class="hcard">
+      <img class="hcard-img" src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/revision/refs/heads/main/5bced3ec.webp" alt="Albufeira">
+      <div class="hcard-ov"></div>
+      <div class="hdest-badge">Albufeira &bull; Portugal</div>
+      <div class="hcard-cnt">
+        <div class="hcard-tag">&#x1F37B; Lads Holiday</div>
+        <div class="hcard-name">Albufeira</div>
+        <div class="hcard-dates">12 &ndash; 18 July 2026</div>
+        <div class="hnums" id="h-alb"></div>
+      </div>
+    </div>
+    <div class="hcard">
+      <img class="hcard-img" src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/revision/refs/heads/main/piscina-exterior.jpg" alt="Menorca">
+      <div class="hcard-ov"></div>
+      <div class="hdest-badge">Ciutadella &bull; Menorca</div>
+      <div class="hcard-cnt">
+        <div class="hcard-tag">&#x2600;&#xFE0F; Summer Holiday</div>
+        <div class="hcard-name">Ciutadella, Menorca</div>
+        <div class="hcard-dates">28 July &ndash; 3 August 2026</div>
+        <div class="hnums" id="h-men"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="g3">
+    <div class="sc"><div class="sc-ico ico-b">&#x1F310;</div><div><div class="sv" id="sc-ac">0</div><div class="sl">Active Projects</div></div></div>
+    <div class="sc"><div class="sc-ico ico-g">&#x2705;</div><div><div class="sv" id="sc-li">0</div><div class="sl">Sites Launched</div></div></div>
+    <div class="sc"><div class="sc-ico ico-a">&#x1F4E3;</div><div><div class="sv" id="sc-pr">0</div><div class="sl">Prospects</div></div></div>
+  </div>
+
+  <div class="gmain">
+    <div>
+
+      <!-- CONTACTS -->
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-hdr">
+          <div class="card-title">&#x1F4DE; Tomorrow's Contact List</div>
+          <div style="font-size:11px;color:rgba(37,99,235,.8);background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.22);padding:3px 9px;border-radius:20px;font-weight:600;" id="tmr-d"></div>
+        </div>
+        <div style="padding:0 20px 8px;font-size:12px;color:var(--muted);">Plan who to reach out to. Tick off as you go.</div>
+        <div class="clist" id="clist"></div>
+        <div style="padding:8px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:11px;color:var(--muted);" id="ct-count"></div>
+          <div style="display:flex;gap:5px;">
+            <button class="btn-s" onclick="clrDone()">Clear done</button>
+            <button class="btn-s" onclick="rstCts()">Reset</button>
+          </div>
+        </div>
+        <div class="prow">
+          <input class="pi" id="ct-name" placeholder="Name or business..." maxlength="60" style="flex:2;">
+          <select class="psel" id="ct-type">
+            <option value="Call">Call</option>
+            <option value="Message">Message</option>
+            <option value="Email">Email</option>
+            <option value="Visit">Visit</option>
+            <option value="Follow Up">Follow Up</option>
+          </select>
+          <button class="btn-p" onclick="addCt()">+ Add</button>
+        </div>
+        <div style="padding:0 20px 16px;">
+          <textarea class="tnote" id="tn-area" placeholder="Notes for tomorrow &mdash; talking points, follow-ups, ideas..."></textarea>
+          <div class="sv-lbl" id="tn-sv">Auto-saved</div>
+        </div>
+      </div>
+
+      <!-- CLIENTS -->
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-hdr"><div class="card-title">&#x1F464; Client Notes</div><button class="btn-p" onclick="openAcm()">+ New Client</button></div>
+        <div class="ctabs" id="ctabs"></div>
+        <div id="cview" class="cview"></div>
+      </div>
+
+      <!-- TASKS -->
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-hdr"><div class="card-title">&#x26A1; Quick Tasks</div></div>
+        <div class="card-body">
+          <div class="qwl" id="qwl"></div>
+          <div class="qw-add">
+            <input class="qw-in" id="qw-in" placeholder="Add a task..." maxlength="80">
+            <button class="btn-p" onclick="addQW()" style="padding:8px 13px;">+ Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTES — custom sections -->
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-hdr"><div class="card-title">&#x1F4CB; Notes</div><div class="sv-lbl" id="gn-sv">Auto-saved</div></div>
+        <div class="card-body">
+          <div class="notes-tabs-row" id="ntabs-row"></div>
+          <div id="notes-panels"></div>
+        </div>
+      </div>
+
+      <!-- WORLD CUP TODAY -->
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-hdr">
+          <div class="card-title">&#x26BD; Today's World Cup Fixtures</div>
+          <div style="font-size:11px;color:var(--muted);" id="wc-date-lbl"></div>
+        </div>
+        <div class="card-body">
+          <div id="wc-today"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <div style="display:flex;flex-direction:column;gap:18px;">
+
+      <div>
+        <div class="sec-lbl">&#x1F4FA; GB News Live</div>
+        <div class="gbnw">
+          <div class="gbn-hdr"><div class="gbn-lbl"><div class="gbn-dot"></div>LIVE 24/7</div><button class="gbn-opbtn" onclick="openGbnFs()">Full</button></div>
+          <div class="gbn-emb"><iframe src="https://www.youtube.com/embed/QliL4CGc7iY?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen frameborder="0"></iframe></div>
+        </div>
+        <div class="gbn-update-row">
+          <div class="sec-lbl" style="margin-bottom:0;">&#x1F4F0; Latest Headlines</div>
+          <span style="font-size:10px;color:#444;" id="gbn-ul"></span>
+        </div>
+        <div class="hlst" id="hlst"><div class="gbn-load">Loading headlines...</div></div>
+      </div>
+
+      <!-- FB OUTREACH -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">&#x1F4E3; Facebook Outreach</div><div style="font-size:11px;color:var(--muted);" id="g-count"></div></div>
+        <div class="card-body">
+          <div class="ombox">
+            <div class="om-lbl">Post Template &mdash; click Copy</div>
+            <div class="om-txt">Hi, am looking for a limited number of local businesses that would be interested in having a website designed free of charge. Based in Huddersfield, we are currently building our portfolio with small businesses in the area.<br><br>The only cost to you would be to cover your own domain and hosting costs. If you are interested or know someone who might be, drop me a message or leave a comment below. Thanks</div>
+            <button class="om-copy" id="cp-btn" onclick="cpMsg()">Copy</button>
+          </div>
+          <div style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);"><span>Posted</span><span id="gp-lbl">0 / 0</span></div>
+            <div class="gpbw"><div class="gpb" id="gpb" style="width:0%"></div></div>
+          </div>
+          <div class="glist" id="glist"></div>
+          <div class="gadd">
+            <input class="pi" id="g-in" placeholder="Facebook group name..." maxlength="80" style="flex:1;">
+            <button class="btn-p" onclick="addG()">+ Add</button>
+          </div>
+          <div style="margin-top:7px;display:flex;gap:5px;justify-content:flex-end;">
+            <button class="btn-s" onclick="rstG()">Reset ticks</button>
+            <button class="btn-s" onclick="clrPG()">Clear posted</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ENGLAND -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">England Group L</div></div>
+        <div class="card-body">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Croatia &middot; Ghana &middot; Panama</div>
+          <div class="eng-box"><div class="eng-lbl">Match 1 &mdash; Wed 17 Jun, 21:00 BST</div><div class="eng-match">England vs Croatia</div><div class="eng-info">Dallas, Texas</div></div>
+          <div class="eng-box"><div class="eng-lbl">Match 2 &mdash; Tue 23 Jun, 21:00 BST</div><div class="eng-match">England vs Ghana</div><div class="eng-info">Boston, Massachusetts</div></div>
+          <div class="eng-box"><div class="eng-lbl">Match 3 &mdash; Sat 28 Jun, 02:00 BST</div><div class="eng-match">Panama vs England</div><div class="eng-info">New York / New Jersey</div></div>
+          <div style="margin-top:10px;padding:9px 12px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.22);border-radius:8px;font-size:12px;color:#6ee7b7;font-weight:600;">Final &mdash; Sun 19 July &bull; New York NJ Stadium</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer id="main-footer" style="display:none;">
+  <div class="footer-logo"><img src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/asset/refs/heads/main/Franks_Media__1_-removebg-preview.png" alt=""></div>
+  <span class="ft">Franks Media &middot; Business Dashboard</span>
+  <span class="freset" onclick="if(confirm('Reset all data?')){localStorage.removeItem('fmbiz5');location.reload();}">Reset all data</span>
+</footer>
+
+<script>
+var WC = [
+  ["2026-06-11","21:00","Mexico","South Africa","Group A","Mexico City",0],
+  ["2026-06-12","02:00","South Korea","Czechia","Group A","Guadalajara",0],
+  ["2026-06-12","20:00","Canada","Bosnia & Herz.","Group B","Toronto",0],
+  ["2026-06-13","02:00","USA","Paraguay","Group D","Los Angeles",0],
+  ["2026-06-13","20:00","Qatar","Switzerland","Group B","Los Angeles",0],
+  ["2026-06-13","23:00","Brazil","Morocco","Group C","New York/NJ",0],
+  ["2026-06-14","02:00","Haiti","Scotland","Group C","Philadelphia",0],
+  ["2026-06-14","20:00","Turkey","Australia","Group D","Seattle",0],
+  ["2026-06-14","23:00","Germany","Ecuador","Group E","Toronto",0],
+  ["2026-06-15","02:00","Ivory Coast","Curacao","Group E","Kansas City",0],
+  ["2026-06-15","18:00","Spain","Cape Verde","Group H","Atlanta",0],
+  ["2026-06-15","21:00","Belgium","Egypt","Group G","Seattle",0],
+  ["2026-06-15","23:00","Saudi Arabia","Uruguay","Group H","Miami",0],
+  ["2026-06-16","02:00","Iran","New Zealand","Group G","Los Angeles",0],
+  ["2026-06-16","20:00","France","Senegal","Group I","New York/NJ",0],
+  ["2026-06-16","23:00","Iraq","Norway","Group I","Philadelphia",0],
+  ["2026-06-17","00:00","Argentina","Algeria","Group J","Kansas City",0],
+  ["2026-06-17","02:00","Austria","Jordan","Group J","Los Angeles",0],
+  ["2026-06-17","18:00","Portugal","DR Congo","Group K","Houston",0],
+  ["2026-06-17","21:00","England","Croatia","Group L","Dallas",1],
+  ["2026-06-17","23:00","Netherlands","Japan","Group F","Dallas",0],
+  ["2026-06-18","02:00","Ghana","Panama","Group L","Toronto",0],
+  ["2026-06-18","20:00","Sweden","Tunisia","Group F","Houston",0],
+  ["2026-06-18","23:00","Uzbekistan","Colombia","Group K","Mexico City",0],
+  ["2026-06-19","02:00","Mexico","South Korea","Group A","Atlanta",0],
+  ["2026-06-19","20:00","Czechia","South Africa","Group A","Guadalajara",0],
+  ["2026-06-19","23:00","Canada","Qatar","Group B","Vancouver",0],
+  ["2026-06-20","02:00","Bosnia & Herz.","Switzerland","Group B","Los Angeles",0],
+  ["2026-06-20","20:00","Brazil","Haiti","Group C","Boston",0],
+  ["2026-06-20","23:00","Scotland","Morocco","Group C","Seattle",0],
+  ["2026-06-21","02:00","USA","Turkey","Group D","Seattle",0],
+  ["2026-06-21","20:00","Paraguay","Australia","Group D","Los Angeles",0],
+  ["2026-06-21","23:00","Germany","Ivory Coast","Group E","Dallas",0],
+  ["2026-06-22","02:00","Ecuador","Curacao","Group E","Kansas City",0],
+  ["2026-06-22","20:00","Netherlands","Sweden","Group F","Kansas City",0],
+  ["2026-06-22","23:00","Belgium","Iran","Group G","Miami",0],
+  ["2026-06-23","02:00","Tunisia","Japan","Group F","Monterrey",0],
+  ["2026-06-23","20:00","Spain","Saudi Arabia","Group H","Kansas City",0],
+  ["2026-06-23","21:00","England","Ghana","Group L","Boston",1],
+  ["2026-06-23","23:00","Egypt","New Zealand","Group G","Vancouver",0],
+  ["2026-06-24","02:00","Uruguay","Cape Verde","Group H","Miami",0],
+  ["2026-06-24","20:00","France","Iraq","Group I","Dallas",0],
+  ["2026-06-24","23:00","Senegal","Norway","Group I","New York/NJ",0],
+  ["2026-06-25","02:00","Argentina","Austria","Group J","Los Angeles",0],
+  ["2026-06-25","20:00","Algeria","Jordan","Group J","San Francisco",0],
+  ["2026-06-25","23:00","Portugal","Uzbekistan","Group K","Kansas City",0],
+  ["2026-06-26","02:00","DR Congo","Colombia","Group K","Houston",0],
+  ["2026-06-26","20:00","Mexico","Czechia","Group A","Mexico City",0],
+  ["2026-06-26","20:00","South Korea","South Africa","Group A","Atlanta",0],
+  ["2026-06-26","23:00","Canada","Switzerland","Group B","Toronto",0],
+  ["2026-06-27","02:00","Qatar","Bosnia & Herz.","Group B","Vancouver",0],
+  ["2026-06-27","20:00","Brazil","Scotland","Group C","New York/NJ",0],
+  ["2026-06-27","20:00","Morocco","Haiti","Group C","Philadelphia",0],
+  ["2026-06-27","23:00","USA","Australia","Group D","Seattle",0],
+  ["2026-06-28","02:00","Turkey","Paraguay","Group D","Los Angeles",0],
+  ["2026-06-28","02:00","Panama","England","Group L","New York/NJ",1],
+  ["2026-06-28","20:00","Germany","Curacao","Group E","Toronto",0],
+  ["2026-06-28","20:00","Ecuador","Ivory Coast","Group E","Dallas",0],
+  ["2026-06-28","23:00","Netherlands","Tunisia","Group F","Dallas",0],
+  ["2026-06-29","02:00","Japan","Sweden","Group F","Houston",0],
+  ["2026-06-29","20:00","Spain","Uruguay","Group H","Atlanta",0],
+  ["2026-06-29","20:00","Saudi Arabia","Cape Verde","Group H","Miami",0],
+  ["2026-06-29","23:00","Belgium","New Zealand","Group G","Seattle",0],
+  ["2026-06-30","02:00","Egypt","Iran","Group G","Los Angeles",0],
+  ["2026-06-30","20:00","France","Norway","Group I","New York/NJ",0],
+  ["2026-06-30","20:00","Iraq","Senegal","Group I","Philadelphia",0],
+  ["2026-07-01","02:00","Argentina","Jordan","Group J","Kansas City",0],
+  ["2026-07-01","02:00","Austria","Algeria","Group J","Los Angeles",0],
+  ["2026-07-01","20:00","Portugal","Colombia","Group K","Houston",0],
+  ["2026-07-01","20:00","Uzbekistan","DR Congo","Group K","Mexico City",0],
+  ["2026-07-02","02:00","Croatia","Panama","Group L","Toronto",0],
+  ["2026-07-03","22:00","R32 W1","R32 W2","Round of 32","TBC",0],
+  ["2026-07-04","02:00","R32 W3","R32 W4","Round of 32","TBC",0],
+  ["2026-07-04","22:00","R32 W5","R32 W6","Round of 32","TBC",0],
+  ["2026-07-05","02:00","R32 W7","R32 W8","Round of 32","TBC",0],
+  ["2026-07-05","22:00","R32 W9","R32 W10","Round of 32","TBC",0],
+  ["2026-07-06","02:00","R32 W11","R32 W12","Round of 32","TBC",0],
+  ["2026-07-06","22:00","R32 W13","R32 W14","Round of 32","TBC",0],
+  ["2026-07-07","02:00","R32 W15","R32 W16","Round of 32","TBC",0],
+  ["2026-07-07","22:00","R16 W1","R16 W2","Round of 16","TBC",0],
+  ["2026-07-08","02:00","R16 W3","R16 W4","Round of 16","TBC",0],
+  ["2026-07-08","22:00","R16 W5","R16 W6","Round of 16","TBC",0],
+  ["2026-07-09","02:00","R16 W7","R16 W8","Round of 16","TBC",0],
+  ["2026-07-10","22:00","QF W1","QF W2","Quarter-Final","TBC",0],
+  ["2026-07-11","02:00","QF W3","QF W4","Quarter-Final","TBC",0],
+  ["2026-07-11","22:00","QF W5","QF W6","Quarter-Final","TBC",0],
+  ["2026-07-12","02:00","QF W7","QF W8","Quarter-Final","TBC",0],
+  ["2026-07-14","22:00","SF W1","SF W2","Semi-Final","TBC",0],
+  ["2026-07-15","22:00","SF W3","SF W4","Semi-Final","TBC",0],
+  ["2026-07-18","22:00","3rd Place","3rd Place","3rd Place Match","Miami",0],
+  ["2026-07-19","21:00","TBD","TBD","FINAL","New York/NJ",0]
+];
+
+var KEY = 'fmbiz5';
+function ldS() {
+  try { var r = localStorage.getItem(KEY); if (r) return JSON.parse(r); } catch(e) {}
+  return {
+    cts:[], tn:'', cls:[], acl:null, grps:[], tasks:[],
+    notes:[ {id:'n1',label:'Ideas',content:''}, {id:'n2',label:'Pricing',content:''}, {id:'n3',label:'Process',content:''} ],
+    activeNote:'n1'
+  };
+}
+var S = ldS();
+if (!S.notes) S.notes = [{id:'n1',label:'Ideas',content:''},{id:'n2',label:'Pricing',content:''},{id:'n3',label:'Process',content:''}];
+if (!S.activeNote) S.activeNote = S.notes[0] ? S.notes[0].id : 'n1';
+if (!S.tasks) S.tasks = [];
+
+var svT = null;
+function save() {
+  clearTimeout(svT);
+  svT = setTimeout(function() {
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {}
+    var el = document.getElementById('nav-saved');
+    if (el) { el.textContent = 'Saved'; el.classList.add('ok'); setTimeout(function(){ el.textContent='Auto-saving'; el.classList.remove('ok'); }, 1200); }
+  }, 500);
+}
+
+function checkPw() {
+  var v = (document.getElementById('pwi').value || '').trim().toLowerCase();
+  if (v === 'huddersfield') {
+    document.getElementById('pw').style.display = 'none';
+    document.getElementById('main-page').style.display = 'block';
+    document.getElementById('main-footer').style.display = 'flex';
+    init();
+  } else {
+    var e = document.getElementById('pwe');
+    e.textContent = 'Incorrect password';
+    document.getElementById('pwi').value = '';
+    setTimeout(function(){ e.textContent = ''; }, 2000);
+  }
+}
+
+function zp(n) { return String(n).padStart(2,'0'); }
+function uid() { return 'n' + Date.now() + Math.floor(Math.random()*1000); }
+function initials(name) { return name.split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0,2); }
+function todayStr() { var d = new Date(); return d.getFullYear() + '-' + zp(d.getMonth()+1) + '-' + zp(d.getDate()); }
+function timeAgo(ts) {
+  if (!ts) return '';
+  var d = Math.floor((Date.now()-ts)/60000);
+  if (d < 2) return 'Just now'; if (d < 60) return d+'m ago';
+  if (d < 1440) return Math.floor(d/60)+'h ago'; return Math.floor(d/1440)+'d ago';
+}
+
+/* LIVE CLOCK BST */
+function tickClock() {
+  var now = new Date();
+  var bst = new Date(now.toLocaleString('en-GB', {timeZone:'Europe/London'}));
+  var h = zp(bst.getHours()), m = zp(bst.getMinutes()), s = zp(bst.getSeconds());
+  var el = document.getElementById('nav-clock');
+  if (el) el.textContent = h + ':' + m + ':' + s;
+}
+
+/* NAV DATE */
+function setNavDate() {
+  var d = new Date();
+  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var mnths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var t = new Date(); t.setDate(t.getDate()+1);
+  var td = document.getElementById('tmr-d');
+  if (td) td.textContent = days[t.getDay()] + ' ' + t.getDate() + ' ' + mnths[t.getMonth()];
+  var wl = document.getElementById('wc-date-lbl');
+  if (wl) wl.textContent = days[d.getDay()] + ' ' + d.getDate() + ' ' + mnths[d.getMonth()];
+}
+
+/* HOLIDAYS */
+function rdHols() {
+  var now = new Date();
+  var trips = [
+    { id:'alb', s: new Date('2026-07-12T00:00:00'), e: new Date('2026-07-18T23:59:59') },
+    { id:'men', s: new Date('2026-07-28T00:00:00'), e: new Date('2026-08-03T23:59:59') }
+  ];
+  trips.forEach(function(trip) {
+    var el = document.getElementById('h-' + trip.id);
+    if (!el) return;
+    if (now >= trip.s && now <= trip.e) {
+      el.innerHTML = '<div class="haway">You\'re there right now!</div>';
+      return;
+    }
+    if (now > trip.e) {
+      el.innerHTML = '<div class="hcomplete">Trip complete</div>';
+      return;
+    }
+    var diff = trip.s - now;
+    var days = Math.floor(diff/864e5);
+    var hrs = Math.floor((diff%864e5)/36e5);
+    var mins = Math.floor((diff%36e5)/6e4);
+    var secs = Math.floor((diff%6e4)/1e3);
+    var hot = days <= 14 ? ' hot' : '';
+    el.innerHTML = [
+      '<div class="hnum' + hot + '"><div class="hnum-v">' + days + '</div><div class="hnum-u">Days</div></div>',
+      '<div class="hnum"><div class="hnum-v">' + zp(hrs) + '</div><div class="hnum-u">Hrs</div></div>',
+      '<div class="hnum"><div class="hnum-v">' + zp(mins) + '</div><div class="hnum-u">Min</div></div>',
+      '<div class="hnum"><div class="hnum-v">' + zp(secs) + '</div><div class="hnum-u">Sec</div></div>'
+    ].join('');
+  });
+}
+
+/* WORLD CUP TODAY */
+function rdWC() {
+  var today = todayStr();
+  var KO = ['Round of 32','Round of 16','Quarter-Final','Semi-Final','3rd Place Match'];
+  var matches = WC.filter(function(m){ return m[0] === today; });
+  var c = document.getElementById('wc-today');
+  if (!c) return;
+  if (!matches.length) {
+    c.innerHTML = '<div class="wc-no-matches">No World Cup fixtures today.</div>';
+    return;
+  }
+  var html = '<div class="wc-today-list">';
+  matches.forEach(function(m) {
+    var iE = m[6] === 1, isKO = KO.indexOf(m[4]) >= 0, isFin = m[4] === 'FINAL';
+    var cls = 'wcm' + (iE ? ' eng' : isFin ? ' fin' : isKO ? ' ko' : '');
+    var eb = iE ? '<span class="wc-eng-b">ENG</span>' : '';
+    html += '<div class="' + cls + '"><div class="wct">' + m[1] + '</div><div class="wcteams"><span class="wcteam">' + m[2] + '</span><span class="wcvs">vs</span><span class="wcteam">' + m[3] + '</span></div>' + eb + '<span class="wcgrp">' + m[4] + '</span><span class="wcven">' + m[5] + '</span></div>';
+  });
+  html += '</div>';
+  c.innerHTML = html;
+}
+
+/* GBN HEADLINES — parse from RSS feed items in page context */
+var GBN_ITEMS = [
+  {title:"Councillors vote to ban fireworks on Bonfire night across Scottish capital",link:"https://www.gbnews.com/news/edinburgh-news-councillors-ban-fireworks-bonfire-night",img:"https://assets.rbl.ms/62650454/origin.png",pubDate:1749498412000},
+  {title:"Major British supermarket opens four new sites and refurbishing six more in latest expansion move",link:"https://www.gbnews.com/money/major-british-supermarket-opens-four-new-sites-and-refurbishing-six-more-in-latest-expansion-move",img:"https://assets.rbl.ms/66887814/origin.jpg",pubDate:1749498264000},
+  {title:"White working-class pupils miss nearly double amount of lessons compared to average",link:"https://www.gbnews.com/news/white-working-class-pupils-miss-double-lessons-compared-to-average",img:"https://assets.rbl.ms/62309818/origin.png",pubDate:1749498219000},
+  {title:"Beloved dog saved after being swept three miles from English coast on inflatable kayak",link:"https://www.gbnews.com/news/northumberland-news-dog-saved-three-miles-from-coast-inflatable-kayak",img:"https://assets.rbl.ms/66886720/origin.png",pubDate:1749497810000},
+  {title:"Belfast bus set on fire as hundreds protest after Sudanese migrant charged with attempted murder",link:"https://www.gbnews.com/news/belfast-protest-bus-fire-sudanese-migrant-charged",img:"https://assets.rbl.ms/66887868/origin.jpg",pubDate:1749496818000},
+  {title:"Donald Trump confirms US will respond after Iran shoots down helicopter",link:"https://www.gbnews.com/politics/us/donald-trump-iran-apache-helicopter",img:"https://assets.rbl.ms/66885881/origin.jpg",pubDate:1749493078000},
+  {title:"Small boat grooming gang offender on the run amid guilty verdict",link:"https://www.gbnews.com/news/migrant-crisis-small-boat-grooming-gang-offender-on-the-run-amid-guilty-verdict",img:"https://assets.rbl.ms/66884908/origin.webp",pubDate:1749492152000},
+  {title:"Nigel Farage skewers 'Tory madness' for 'killing the North Sea' in blistering takedown",link:"https://www.gbnews.com/money/nigel-farage-skewers-tories-over-north-sea",img:"https://assets.rbl.ms/66886708/origin.jpg",pubDate:1749491961000},
+  {title:"President Zelensky reveals his wife sent regards to King Charles before Keir Starmer",link:"https://www.gbnews.com/royal/president-zelensky-king-charles-keir-starmer-royal-news",img:"https://assets.rbl.ms/66884913/origin.png",pubDate:1749491223000},
+  {title:"Century-old British manufacturer collapses into administration with 170 jobs lost amid soaring costs",link:"https://www.gbnews.com/money/century-old-british-manufacturer-collapses-into-administration-with-170-jobs-lost-amid-soaring-costs",img:"https://assets.rbl.ms/66884309/origin.jpg",pubDate:1749490424000}
+];
+var GD = GBN_ITEMS.slice();
+
+function fGBN() {
+  var proxies = [
+    {u:'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://www.gbnews.com/feeds/news.rss'), m:'j'},
+    {u:'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.gbnews.com/feeds/news.rss'), m:'x'}
+  ];
+  tryGBN(proxies, 0);
+}
+function tryGBN(px, i) {
+  if (i >= px.length) { rdHL(); return; }
+  fetch(px[i].u, {signal: AbortSignal.timeout(9000)})
+    .then(function(r){ return px[i].m === 'j' ? r.json() : r.text().then(function(t){ return {_t:t}; }); })
+    .then(function(d) {
+      var s = [];
+      if (px[i].m === 'j' && d.items && d.items.length) {
+        d.items.slice(0,10).forEach(function(it){
+          if (it.title) s.push({
+            title: it.title.trim(),
+            link: it.link || 'https://www.gbnews.com',
+            img: it.thumbnail || (it.enclosure && it.enclosure.link) || '',
+            pubDate: new Date(it.pubDate).getTime() || Date.now()
+          });
+        });
+      } else {
+        var xml = new DOMParser().parseFromString(d._t || '', 'text/xml');
+        xml.querySelectorAll('item').forEach(function(it, n) {
+          if (n >= 10) return;
+          var t = ((it.querySelector('title')||{}).textContent||'').replace(/^\s*<!\[CDATA\[/,'').replace(/\]\]>\s*$/,'').trim();
+          var l = 'https://www.gbnews.com';
+          var le = it.querySelector('link'); if (le) { var lv=(le.textContent||'').trim(); if(lv.startsWith('http')) l=lv; }
+          var img = '';
+          var mc = it.querySelector('content');
+          if (mc && mc.getAttribute('url')) img = mc.getAttribute('url');
+          var pub = ((it.querySelector('pubDate')||{}).textContent||'');
+          if (t) s.push({title:t, link:l, img:img, pubDate: new Date(pub).getTime()||Date.now()});
+        });
+      }
+      if (!s.length) throw new Error('empty');
+      GD = s;
+      var n = new Date(); var ul = document.getElementById('gbn-ul'); if (ul) ul.textContent = 'Updated ' + zp(n.getHours())+':'+zp(n.getMinutes());
+      rdHL();
+    }).catch(function(){ tryGBN(px, i+1); });
+}
+function rdHL() {
+  var c = document.getElementById('hlst'); if (!c) return; c.innerHTML = '';
+  GD.forEach(function(s) {
+    var a = document.createElement('a');
+    a.className = 'hi-item';
+    a.href = s.link;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    var imgHtml = s.img
+      ? '<img class="hi-img" src="' + s.img + '" loading="lazy" onerror="this.style.display=\'none\'">'
+      : '<div class="hi-img" style="background:rgba(185,28,28,.15);display:flex;align-items:center;justify-content:center;font-size:16px;">&#x1F4F0;</div>';
+    a.innerHTML = imgHtml + '<div class="hi-info"><div class="hi-cat">GB News</div><div class="hi-title">' + s.title + '</div><div class="hi-time">' + timeAgo(s.pubDate) + '</div></div>';
+    c.appendChild(a);
+  });
+}
+function openGbnFs() {
+  document.getElementById('gbnfs-iframe').src = 'https://www.youtube.com/embed/QliL4CGc7iY?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1';
+  document.getElementById('gbnfs').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeGbnFs() {
+  document.getElementById('gbnfs-iframe').src = '';
+  document.getElementById('gbnfs').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* CONTACTS */
+function addCt() {
+  var n = (document.getElementById('ct-name').value || '').trim(); if (!n) return;
+  S.cts.push({id:uid(), name:n, type:document.getElementById('ct-type').value, done:false});
+  document.getElementById('ct-name').value = ''; save(); rdCts(); rdStats();
+}
+function togCt(id) { var c=S.cts.find(function(x){return x.id===id;}); if(c){c.done=!c.done;save();rdCts();} }
+function delCt(id) { S.cts=S.cts.filter(function(x){return x.id!==id;}); save(); rdCts(); rdStats(); }
+function clrDone() { S.cts=S.cts.filter(function(x){return !x.done;}); save(); rdCts(); }
+function rstCts() { S.cts.forEach(function(c){c.done=false;}); save(); rdCts(); }
+function rdCts() {
+  var c = document.getElementById('clist'); if (!c) return; c.innerHTML = '';
+  if (!S.cts.length) {
+    c.innerHTML = '<div style="padding:12px 0;font-size:12px;color:#252b38;text-align:center;font-style:italic;">No contacts planned yet</div>';
+  } else {
+    S.cts.forEach(function(it) {
+      var d = document.createElement('div'); d.className = 'ci-item' + (it.done ? ' done' : '');
+      d.innerHTML = '<div class="ci-chk" onclick="togCt(\'' + it.id + '\')">' + (it.done ? '&#x2713;' : '') + '</div>'
+        + '<div style="flex:1;min-width:0;"><div class="ci-name">' + it.name + '</div><div class="ci-type">' + it.type + '</div></div>'
+        + '<div class="ci-del" onclick="delCt(\'' + it.id + '\')">&#xD7;</div>';
+      c.appendChild(d);
+    });
+  }
+  var done = S.cts.filter(function(x){return x.done;}).length;
+  var cc = document.getElementById('ct-count'); if (cc) cc.textContent = done + '/' + S.cts.length + ' done';
+}
+var tnT = null;
+function saveTn() {
+  clearTimeout(tnT);
+  var el = document.getElementById('tn-area'); if (!el) return; S.tn = el.value;
+  tnT = setTimeout(function() {
+    save();
+    var sv = document.getElementById('tn-sv');
+    if (sv) { sv.textContent='Saved'; sv.classList.add('ok'); setTimeout(function(){sv.textContent='Auto-saved';sv.classList.remove('ok');},1200); }
+  }, 700);
+}
+
+/* CLIENTS */
+function openAcm() { document.getElementById('acm').classList.add('open'); }
+function closeAcm() {
+  document.getElementById('acm').classList.remove('open');
+  ['acm-n','acm-t','acm-no'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
+}
+function addClient() {
+  var n = (document.getElementById('acm-n').value||'').trim(); if (!n) return;
+  S.cls.push({id:uid(), name:n, type:(document.getElementById('acm-t').value||'').trim(), status:document.getElementById('acm-s').value, notes:(document.getElementById('acm-no').value||'').trim(), ts:Date.now()});
+  S.acl = S.cls[S.cls.length-1].id;
+  closeAcm(); save(); rdCls(); rdStats();
+}
+function setAcl(id) { S.acl=id; rdCls(); }
+function delCl(id) {
+  if (!confirm('Delete this client?')) return;
+  S.cls=S.cls.filter(function(c){return c.id!==id;});
+  S.acl=S.cls.length?S.cls[0].id:null;
+  save(); rdCls(); rdStats();
+}
+function setClSt(id,st) { var c=S.cls.find(function(x){return x.id===id;}); if(c){c.status=st;save();rdCls();rdStats();} }
+var cnT={};
+function svCN(id) {
+  clearTimeout(cnT[id]);
+  var el=document.getElementById('cn-'+id); if(!el) return;
+  var c=S.cls.find(function(x){return x.id===id;}); if(c) c.notes=el.value;
+  cnT[id]=setTimeout(function(){save();},500);
+}
+function escH(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+var BGS=['linear-gradient(135deg,#2563eb,#1d4ed8)','linear-gradient(135deg,#7c3aed,#6d28d9)','linear-gradient(135deg,#0891b2,#0e7490)','linear-gradient(135deg,#059669,#047857)','linear-gradient(135deg,#d97706,#b45309)','linear-gradient(135deg,#dc2626,#b91c1c)'];
+var SLBL={prospect:'Prospect',active:'Active',live:'Live',paused:'Paused'};
+var SPILL={prospect:'spr',active:'spa',live:'spl',paused:'spp'};
+function rdCls() {
+  var te=document.getElementById('ctabs'),ve=document.getElementById('cview'); if(!te||!ve) return;
+  if(!S.cls.length){te.innerHTML='<div style="font-size:12px;color:var(--muted);font-style:italic;padding:0 20px 12px;">No clients yet</div>';ve.innerHTML='';return;}
+  te.innerHTML='';
+  S.cls.forEach(function(cl){
+    var btn=document.createElement('button'); btn.className='ctab'+(S.acl===cl.id?' on':''); btn.textContent=cl.name;
+    btn.onclick=function(){setAcl(cl.id);}; te.appendChild(btn);
+  });
+  var cl=S.cls.find(function(c){return c.id===S.acl;})||S.cls[0]; S.acl=cl.id;
+  var bg=BGS[S.cls.indexOf(cl)%BGS.length];
+  var spH=Object.keys(SLBL).map(function(s){
+    return '<button class="csp '+SPILL[s]+'" onclick="setClSt(\''+cl.id+'\',\''+s+'\')" style="'+(cl.status===s?'':'opacity:.4;')+'">'+(cl.status===s?'&#x25CF; ':'')+SLBL[s]+'</button>';
+  }).join('');
+  ve.innerHTML='<div class="cav-row"><div class="cav" style="background:'+bg+';">'+initials(cl.name)+'</div>'
+    +'<div style="flex:1;"><div class="cname">'+cl.name+'</div><div class="ctype">'+(cl.type||'')+'</div></div>'
+    +'<button class="btn-s" style="color:var(--red);" onclick="delCl(\''+cl.id+'\')">Delete</button></div>'
+    +'<div class="csp-row">'+spH+'</div>'
+    +'<textarea class="cna" id="cn-'+cl.id+'" placeholder="Notes for '+cl.name+'..." oninput="svCN(\''+cl.id+'\')">'+escH(cl.notes||'')+'</textarea>'
+    +'<div style="font-size:10px;color:var(--muted);margin-top:4px;">Added '+timeAgo(cl.ts)+'</div>';
+}
+
+/* GROUPS */
+var OMSG = 'Hi, am looking for a limited number of local businesses that would be interested in having a website designed free of charge. Based in Huddersfield, we are currently building our portfolio with small businesses in the area.\n\nThe only cost to you would be to cover your own domain and hosting costs. If you are interested or know someone who might be, drop me a message or leave a comment below. Thanks';
+function cpMsg() {
+  navigator.clipboard.writeText(OMSG).catch(function(){var ta=document.createElement('textarea');ta.value=OMSG;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});
+  var b=document.getElementById('cp-btn');
+  if(b){b.textContent='Copied!';b.classList.add('copied');setTimeout(function(){b.textContent='Copy';b.classList.remove('copied');},2000);}
+}
+function addG() { var n=(document.getElementById('g-in').value||'').trim(); if(!n) return; S.grps.push({id:uid(),name:n,posted:false,ts:0}); document.getElementById('g-in').value=''; save(); rdG(); rdStats(); }
+function togG(id) { var g=S.grps.find(function(x){return x.id===id;}); if(g){g.posted=!g.posted;g.ts=g.posted?Date.now():0;save();rdG();rdStats();} }
+function delG(id) { S.grps=S.grps.filter(function(x){return x.id!==id;}); save(); rdG(); rdStats(); }
+function rstG() { S.grps.forEach(function(g){g.posted=false;g.ts=0;}); save(); rdG(); }
+function clrPG() { S.grps=S.grps.filter(function(g){return !g.posted;}); save(); rdG(); rdStats(); }
+function rdG() {
+  var c=document.getElementById('glist'); if(!c) return; c.innerHTML='';
+  if(!S.grps.length){c.innerHTML='<div style="padding:10px 0;font-size:12px;color:#252b38;text-align:center;font-style:italic;">No groups added yet</div>';}
+  else{S.grps.forEach(function(g){var d=document.createElement('div');d.className='gi'+(g.posted?' posted':'');d.innerHTML='<div class="gi-chk" onclick="togG(\''+g.id+'\')">'+(g.posted?'&#x2713;':'')+'</div><div class="gi-name" onclick="togG(\''+g.id+'\')">'+g.name+'</div>'+(g.posted&&g.ts?'<div class="gi-time">'+timeAgo(g.ts)+'</div>':'')+'<div class="gi-del" onclick="delG(\''+g.id+'\')">&#xD7;</div>';c.appendChild(d);});}
+  var p=S.grps.filter(function(x){return x.posted;}).length,t=S.grps.length;
+  var gc=document.getElementById('g-count'); if(gc) gc.textContent=t+' groups';
+  var gpl=document.getElementById('gp-lbl'); if(gpl) gpl.textContent=p+' / '+t;
+  var gpb=document.getElementById('gpb'); if(gpb) gpb.style.width=(t?Math.round(p/t*100):0)+'%';
+}
+
+/* TASKS */
+function addQW() { var t=(document.getElementById('qw-in').value||'').trim(); if(!t) return; S.tasks.push({id:uid(),text:t,done:false}); document.getElementById('qw-in').value=''; save(); rdQW(); }
+function togQW(id) { var t=S.tasks.find(function(x){return x.id===id;}); if(t){t.done=!t.done;save();rdQW();} }
+function delQW(id) { S.tasks=S.tasks.filter(function(x){return x.id!==id;}); save(); rdQW(); }
+function rdQW() {
+  var c=document.getElementById('qwl'); if(!c) return; c.innerHTML='';
+  if(!S.tasks.length){c.innerHTML='<div style="font-size:12px;color:#252b38;text-align:center;padding:10px 0;font-style:italic;">Nothing here yet</div>';return;}
+  S.tasks.forEach(function(t){var d=document.createElement('div');d.className='qw-item'+(t.done?' done':'');d.innerHTML='<div class="qw-chk" onclick="togQW(\''+t.id+'\')">'+(t.done?'&#x2713;':'')+'</div><div class="qw-txt" onclick="togQW(\''+t.id+'\')">'+t.text+'</div><div class="qw-del" onclick="delQW(\''+t.id+'\')">&#xD7;</div>';c.appendChild(d);});
+}
+
+/* NOTES — custom sections */
+var gnT = {};
+function rdNotes() {
+  var tabsRow = document.getElementById('ntabs-row');
+  var panels = document.getElementById('notes-panels');
+  if (!tabsRow || !panels) return;
+  tabsRow.innerHTML = '';
+  panels.innerHTML = '';
+  S.notes.forEach(function(note) {
+    /* Tab */
+    var btn = document.createElement('button');
+    btn.className = 'ntab' + (S.activeNote === note.id ? ' on' : '');
+    btn.textContent = note.label;
+    btn.onclick = function() { S.activeNote = note.id; save(); rdNotes(); };
+    tabsRow.appendChild(btn);
+    /* Panel */
+    var panel = document.createElement('div');
+    panel.style.display = S.activeNote === note.id ? 'block' : 'none';
+    var delBtn = S.notes.length > 1 ? '<button class="note-del-btn" onclick="delNote(\'' + note.id + '\')">Delete section</button>' : '';
+    panel.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;"><div style="font-size:11px;color:var(--muted);">Section: <strong style="color:var(--text);">' + note.label + '</strong></div>' + delBtn + '</div>'
+      + '<textarea class="gna" id="gna-' + note.id + '" placeholder="Notes for ' + note.label + '..." oninput="svNote(\'' + note.id + '\')">' + escH(note.content || '') + '</textarea>';
+    panels.appendChild(panel);
+  });
+  /* Add section button */
+  var addBtn = document.createElement('button');
+  addBtn.className = 'ntab-add';
+  addBtn.textContent = '+ New section';
+  addBtn.onclick = addNoteSection;
+  tabsRow.appendChild(addBtn);
+}
+function svNote(id) {
+  clearTimeout(gnT[id]);
+  var el = document.getElementById('gna-' + id); if (!el) return;
+  var note = S.notes.find(function(n){return n.id===id;}); if (note) note.content = el.value;
+  gnT[id] = setTimeout(function() {
+    save();
+    var sv = document.getElementById('gn-sv');
+    if (sv) { sv.textContent='Saved'; sv.classList.add('ok'); setTimeout(function(){sv.textContent='Auto-saved';sv.classList.remove('ok');},1200); }
+  }, 700);
+}
+function addNoteSection() {
+  var label = prompt('Name for this section:');
+  if (!label || !label.trim()) return;
+  var newNote = {id: uid(), label: label.trim(), content: ''};
+  S.notes.push(newNote);
+  S.activeNote = newNote.id;
+  save(); rdNotes();
+}
+function delNote(id) {
+  if (S.notes.length <= 1) return;
+  if (!confirm('Delete this section and all its notes?')) return;
+  S.notes = S.notes.filter(function(n){return n.id!==id;});
+  S.activeNote = S.notes[0].id;
+  save(); rdNotes();
+}
+
+/* STATS */
+function rdStats() {
+  var cl = S.cls || [];
+  var scAc=document.getElementById('sc-ac'); if(scAc) scAc.textContent=cl.filter(function(c){return c.status==='active';}).length;
+  var scLi=document.getElementById('sc-li'); if(scLi) scLi.textContent=cl.filter(function(c){return c.status==='live';}).length;
+  var scPr=document.getElementById('sc-pr'); if(scPr) scPr.textContent=cl.filter(function(c){return c.status==='prospect';}).length;
+}
+
+/* KEYBOARD */
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') { closeGbnFs(); document.getElementById('acm').classList.remove('open'); }
+});
+
+function wireUp() {
+  var tnArea = document.getElementById('tn-area');
+  if (tnArea) { tnArea.addEventListener('input', saveTn); if (S.tn) tnArea.value = S.tn; }
+  var ctName = document.getElementById('ct-name');
+  if (ctName) ctName.addEventListener('keydown', function(e){ if(e.key==='Enter') addCt(); });
+  var qwIn = document.getElementById('qw-in');
+  if (qwIn) qwIn.addEventListener('keydown', function(e){ if(e.key==='Enter') addQW(); });
+  var gIn = document.getElementById('g-in');
+  if (gIn) gIn.addEventListener('keydown', function(e){ if(e.key==='Enter') addG(); });
+}
+
+function init() {
+  tickClock(); setInterval(tickClock, 1000);
+  setNavDate(); setInterval(setNavDate, 60000);
+  rdHols(); setInterval(rdHols, 1000);
+  rdWC();
+  rdCts(); rdCls(); rdG(); rdQW(); rdNotes(); rdStats();
+  wireUp();
+  rdHL();
+  fGBN(); setInterval(fGBN, 300000);
+}
+</script>
+</body>
+</html>
