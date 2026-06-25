@@ -216,6 +216,31 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .qw-in{flex:1;padding:8px 11px;background:var(--raised);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;outline:none;}
 .qw-in::placeholder{color:#252b38;}
 
+/* URGENT TASKS */
+.ugl{display:flex;flex-direction:column;gap:6px;}
+.ug-item{display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.28);border-left:3px solid var(--red);border-radius:7px;}
+.ug-item.done{opacity:.45;background:var(--raised);border-color:var(--border);border-left-color:var(--muted);}
+.ug-item.done .ug-txt{text-decoration:line-through;color:var(--muted);}
+.ug-chk{width:18px;height:18px;border-radius:4px;border:1.5px solid rgba(239,68,68,.5);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;cursor:pointer;color:#f87171;}
+.ug-item.done .ug-chk{background:var(--green);border-color:var(--green);color:#fff;}
+.ug-txt{flex:1;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;}
+.ug-flag{font-size:13px;flex-shrink:0;}
+.ug-rank{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:rgba(239,68,68,.6);min-width:16px;flex-shrink:0;}
+.ug-move{display:flex;flex-direction:column;gap:1px;flex-shrink:0;}
+.ug-mbtn{width:18px;height:14px;border:1px solid rgba(255,255,255,.12);background:var(--raised);color:var(--text-dim);font-size:9px;line-height:1;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;}
+.ug-mbtn:hover{background:rgba(255,255,255,.1);color:var(--text);}
+.ug-mbtn:disabled{opacity:.25;cursor:default;}
+.ug-mbtn:disabled:hover{background:var(--raised);color:var(--text-dim);}
+.ug-del{font-size:13px;color:rgba(239,68,68,.3);cursor:pointer;transition:color .2s;flex-shrink:0;}
+.ug-del:hover{color:var(--red);}
+.ug-add{display:flex;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+.ug-in{flex:1;padding:8px 11px;background:var(--raised);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;outline:none;}
+.ug-in::placeholder{color:#252b38;}
+.btn-urgent{padding:9px 13px;background:var(--red);border:none;border-radius:7px;color:#fff;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.btn-urgent:hover{background:#dc2626;}
+.ug-empty{font-size:12px;color:#252b38;text-align:center;padding:10px 0;font-style:italic;}
+.ug-count-badge{font-size:11px;font-weight:700;color:#f87171;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);padding:3px 9px;border-radius:20px;}
+
 /* NOTES */
 .notes-tabs-row{display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
 .ntab{padding:5px 12px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;transition:all .2s;}
@@ -358,6 +383,21 @@ footer{margin-top:32px;padding:13px 26px;border-top:1px solid var(--border);disp
 
   <div class="gmain">
     <div>
+
+      <!-- URGENT TASKS -->
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-hdr">
+          <div class="card-title">&#x1F6A8; Urgent Tasks</div>
+          <div class="ug-count-badge" id="ug-count">0 urgent</div>
+        </div>
+        <div class="card-body">
+          <div class="ugl" id="ugl"></div>
+          <div class="ug-add">
+            <input class="ug-in" id="ug-in" placeholder="Add an urgent task..." maxlength="80">
+            <button class="btn-urgent" onclick="addUG()">+ Add Urgent</button>
+          </div>
+        </div>
+      </div>
 
       <!-- CONTACTS -->
       <div class="card" style="margin-bottom:18px;">
@@ -604,7 +644,7 @@ var KEY = 'fmbiz5';
 function ldS() {
   try { var r = localStorage.getItem(KEY); if (r) return JSON.parse(r); } catch(e) {}
   return {
-    cts:[], tn:'', cls:[], acl:null, grps:[], tasks:[],
+    cts:[], tn:'', cls:[], acl:null, grps:[], tasks:[], urgent:[],
     notes:[ {id:'n1',label:'Ideas',content:''}, {id:'n2',label:'Pricing',content:''}, {id:'n3',label:'Process',content:''} ],
     activeNote:'n1'
   };
@@ -613,6 +653,8 @@ var S = ldS();
 if (!S.notes) S.notes = [{id:'n1',label:'Ideas',content:''},{id:'n2',label:'Pricing',content:''},{id:'n3',label:'Process',content:''}];
 if (!S.activeNote) S.activeNote = S.notes[0] ? S.notes[0].id : 'n1';
 if (!S.tasks) S.tasks = [];
+if (!S.urgent) S.urgent = [];
+S.urgent.forEach(function(u, i) { if (typeof u.order !== 'number') u.order = i + 1; });
 
 var svT = null;
 function save() {
@@ -650,11 +692,20 @@ function timeAgo(ts) {
   if (d < 1440) return Math.floor(d/60)+'h ago'; return Math.floor(d/1440)+'d ago';
 }
 
-/* LIVE CLOCK BST */
+/* LIVE CLOCK BST — uses Intl.DateTimeFormat parts (locale-string round-trip via Date() is unreliable) */
 function tickClock() {
   var now = new Date();
-  var bst = new Date(now.toLocaleString('en-GB', {timeZone:'Europe/London'}));
-  var h = zp(bst.getHours()), m = zp(bst.getMinutes()), s = zp(bst.getSeconds());
+  var parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/London',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+  }).formatToParts(now);
+  var h = '00', m = '00', s = '00';
+  parts.forEach(function(p) {
+    if (p.type === 'hour') h = p.value;
+    if (p.type === 'minute') m = p.value;
+    if (p.type === 'second') s = p.value;
+  });
+  if (h === '24') h = '00';
   var el = document.getElementById('nav-clock');
   if (el) el.textContent = h + ':' + m + ':' + s;
 }
@@ -933,6 +984,54 @@ function rdQW() {
   S.tasks.forEach(function(t){var d=document.createElement('div');d.className='qw-item'+(t.done?' done':'');d.innerHTML='<div class="qw-chk" onclick="togQW(\''+t.id+'\')">'+(t.done?'&#x2713;':'')+'</div><div class="qw-txt" onclick="togQW(\''+t.id+'\')">'+t.text+'</div><div class="qw-del" onclick="delQW(\''+t.id+'\')">&#xD7;</div>';c.appendChild(d);});
 }
 
+/* URGENT TASKS — separate priority list, always sorted with undone-first */
+function addUG() {
+  var t = (document.getElementById('ug-in').value || '').trim(); if (!t) return;
+  var maxOrder = S.urgent.reduce(function(m,x){ return Math.max(m, x.order || 0); }, 0);
+  S.urgent.push({id:uid(), text:t, done:false, ts:Date.now(), order:maxOrder+1});
+  document.getElementById('ug-in').value = '';
+  save(); rdUG();
+}
+function togUG(id) { var u=S.urgent.find(function(x){return x.id===id;}); if(u){u.done=!u.done;save();rdUG();} }
+function delUG(id) { S.urgent=S.urgent.filter(function(x){return x.id!==id;}); save(); rdUG(); }
+function moveUG(id, dir) {
+  /* dir: -1 = up (higher priority), 1 = down (lower priority) */
+  var sorted = S.urgent.slice().sort(function(a,b){ return (a.order||0)-(b.order||0); });
+  var idx = sorted.findIndex(function(x){ return x.id===id; });
+  var swapIdx = idx + dir;
+  if (idx < 0 || swapIdx < 0 || swapIdx >= sorted.length) return;
+  var a = sorted[idx], b = sorted[swapIdx];
+  var tmp = a.order; a.order = b.order; b.order = tmp;
+  save(); rdUG();
+}
+function rdUG() {
+  var c = document.getElementById('ugl'); if (!c) return; c.innerHTML = '';
+  var badge = document.getElementById('ug-count');
+  var openCount = S.urgent.filter(function(x){return !x.done;}).length;
+  if (badge) badge.textContent = openCount + (openCount === 1 ? ' urgent' : ' urgent');
+  if (!S.urgent.length) {
+    c.innerHTML = '<div class="ug-empty">No urgent tasks — nice and clear &#x1F389;</div>';
+    return;
+  }
+  /* Manual rank order — lowest order value = top priority. Ties broken by newest first. */
+  var sorted = S.urgent.slice().sort(function(a, b) {
+    var ao = a.order || 0, bo = b.order || 0;
+    if (ao !== bo) return ao - bo;
+    return b.ts - a.ts;
+  });
+  sorted.forEach(function(u, i) {
+    var d = document.createElement('div');
+    d.className = 'ug-item' + (u.done ? ' done' : '');
+    d.innerHTML = '<div class="ug-rank">' + (i+1) + '</div>'
+      + '<div class="ug-move"><button class="ug-mbtn" onclick="moveUG(\'' + u.id + '\',-1)" ' + (i===0?'disabled':'') + '>&#x25B2;</button><button class="ug-mbtn" onclick="moveUG(\'' + u.id + '\',1)" ' + (i===sorted.length-1?'disabled':'') + '>&#x25BC;</button></div>'
+      + '<div class="ug-chk" onclick="togUG(\'' + u.id + '\')">' + (u.done ? '&#x2713;' : '') + '</div>'
+      + (u.done ? '' : '<span class="ug-flag">&#x1F6A9;</span>')
+      + '<div class="ug-txt" onclick="togUG(\'' + u.id + '\')">' + u.text + '</div>'
+      + '<div class="ug-del" onclick="delUG(\'' + u.id + '\')">&#xD7;</div>';
+    c.appendChild(d);
+  });
+}
+
 /* NOTES — custom sections */
 var gnT = {};
 function rdNotes() {
@@ -1011,6 +1110,8 @@ function wireUp() {
   if (ctName) ctName.addEventListener('keydown', function(e){ if(e.key==='Enter') addCt(); });
   var qwIn = document.getElementById('qw-in');
   if (qwIn) qwIn.addEventListener('keydown', function(e){ if(e.key==='Enter') addQW(); });
+  var ugIn = document.getElementById('ug-in');
+  if (ugIn) ugIn.addEventListener('keydown', function(e){ if(e.key==='Enter') addUG(); });
   var gIn = document.getElementById('g-in');
   if (gIn) gIn.addEventListener('keydown', function(e){ if(e.key==='Enter') addG(); });
 }
@@ -1020,7 +1121,7 @@ function init() {
   setNavDate(); setInterval(setNavDate, 60000);
   rdHols(); setInterval(rdHols, 1000);
   rdWC();
-  rdCts(); rdCls(); rdG(); rdQW(); rdNotes(); rdStats();
+  rdCts(); rdCls(); rdG(); rdQW(); rdUG(); rdNotes(); rdStats();
   wireUp();
   setTimeout(autoResizeAll, 100);
   rdHL();
