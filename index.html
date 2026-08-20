@@ -21,7 +21,6 @@ body{background:#07080a;color:#f0ede8;font-family:'Outfit',sans-serif;overflow-x
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:4px;}
 
-/* PASSWORD */
 #pw{position:fixed;inset:0;z-index:9999;background:#07080a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;}
 #pw .pwlogo{height:60px;filter:brightness(0) invert(1);}
 #pw h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;}
@@ -32,7 +31,6 @@ body{background:#07080a;color:#f0ede8;font-family:'Outfit',sans-serif;overflow-x
 #pwb{padding:12px 18px;background:var(--accent);border:none;border-radius:10px;color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;}
 #pwe{font-size:13px;color:var(--red);height:16px;}
 
-/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;background:rgba(7,8,10,.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
 .nav-logo img{height:34px;filter:brightness(0) invert(1);}
 .nav-right{display:flex;align-items:center;gap:10px;}
@@ -46,24 +44,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .nav-saved{font-size:11px;color:var(--muted);transition:color .3s;}
 .nav-saved.ok{color:var(--green);}
 
-/* PAGE */
 .page{padding-top:74px;max-width:1400px;margin:0 auto;padding-left:26px;padding-right:26px;padding-bottom:56px;}
 
-/* CARDS */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
 .card-hdr{padding:17px 20px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;}
 .card-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);}
 .card-body{padding:0 20px 20px;}
 .sec-lbl{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:10px;}
 
-/* GRIDS */
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px;}
-.hgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;}
+.hgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:24px;}
 .gmain{display:grid;grid-template-columns:1fr 355px;gap:18px;align-items:start;}
-@media(max-width:1100px){.gmain{grid-template-columns:1fr;}.g3{grid-template-columns:1fr 1fr;}}
+@media(max-width:1100px){.gmain{grid-template-columns:1fr;}.g3{grid-template-columns:1fr 1fr;}.hgrid{grid-template-columns:1fr 1fr;}}
 @media(max-width:680px){.g3,.hgrid{grid-template-columns:1fr;}}
 
-/* STAT CARDS */
 .sc{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:17px;display:flex;align-items:center;gap:13px;}
 .sc-ico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
 .ico-b{background:rgba(37,99,235,.14);border:1px solid rgba(37,99,235,.25);}
@@ -72,7 +66,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .sv{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--text);line-height:1;}
 .sl{font-size:12px;color:var(--text-dim);margin-top:2px;}
 
-/* HOLIDAY COUNTDOWNS */
 .hcard{border-radius:20px;overflow:hidden;position:relative;min-height:200px;display:flex;flex-direction:column;justify-content:flex-end;}
 .hcard-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
 .hcard-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.4) 50%,rgba(0,0,0,.05) 100%);}
@@ -90,7 +83,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .hcomplete{font-size:12px;font-weight:600;padding:7px 14px;background:rgba(107,114,128,.15);border:1px solid rgba(107,114,128,.3);border-radius:10px;display:inline-block;color:#9ca3af;}
 .hdest-badge{position:absolute;top:14px;right:14px;z-index:3;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:5px 10px;font-size:10px;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.08em;text-transform:uppercase;}
 
-/* CONTACTS */
 .clist{display:flex;flex-direction:column;gap:6px;padding:0 20px;}
 .ci-item{display:flex;align-items:center;gap:9px;padding:10px 12px;background:var(--raised);border:1px solid var(--border);border-radius:9px;}
 .ci-item.done{opacity:.5;}
@@ -116,7 +108,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .sv-lbl{font-size:11px;color:var(--muted);margin-top:3px;transition:color .3s;}
 .sv-lbl.ok{color:var(--green);}
 
-/* CLIENTS */
 .ctabs{display:flex;gap:5px;padding:0 20px;margin-bottom:12px;flex-wrap:wrap;}
 .ctab{padding:5px 12px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;transition:all .2s;}
 .ctab.on{background:rgba(37,99,235,.15);border-color:rgba(37,99,235,.4);color:var(--accent-hi);}
@@ -135,7 +126,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .csp.spl{border-color:rgba(16,185,129,.4);color:#6ee7b7;background:rgba(16,185,129,.1);}
 .csp.spp{border-color:rgba(107,114,128,.4);color:#9ca3af;background:rgba(107,114,128,.08);}
 
-/* ADD CLIENT MODAL */
 #acm{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);display:none;align-items:center;justify-content:center;padding:16px;}
 #acm.open{display:flex;}
 .acmbox{background:var(--surface);border:1px solid var(--border-hi);border-radius:16px;width:100%;max-width:420px;}
@@ -150,7 +140,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .fsel{width:100%;padding:10px 12px;background:var(--raised);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;outline:none;}
 .fsel option{background:#161a1f;}
 
-/* FB GROUPS */
 .ombox{padding:13px;background:linear-gradient(135deg,rgba(37,99,235,.08),rgba(37,99,235,.03));border:1px solid rgba(37,99,235,.2);border-radius:11px;margin-bottom:12px;position:relative;}
 .om-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-hi);margin-bottom:6px;font-weight:600;}
 .om-txt{font-size:13px;line-height:1.75;color:#d1d5db;}
@@ -171,7 +160,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .gpb{height:100%;background:linear-gradient(to right,var(--green),#34d399);border-radius:4px;transition:width .4s;}
 .gadd{display:flex;gap:7px;}
 
-/* GBN */
 .gbnw{background:#0c0e10;border:2px solid rgba(239,68,68,.3);border-radius:13px;overflow:hidden;margin-bottom:12px;}
 .gbn-hdr{background:linear-gradient(90deg,#991b1b,#7f1d1d);padding:9px 14px;display:flex;align-items:center;justify-content:space-between;}
 .gbn-lbl{display:flex;align-items:center;gap:7px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#fff;letter-spacing:.07em;}
@@ -181,7 +169,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .gbn-opbtn{padding:5px 10px;background:rgba(255,255,255,.15);border:none;color:#fff;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;border-radius:5px;cursor:pointer;}
 .gbn-opbtn:hover{background:rgba(255,255,255,.25);}
 
-/* GBN HEADLINES */
 .hlst{display:flex;flex-direction:column;gap:5px;}
 .hi-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--raised);border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all .2s;text-decoration:none;}
 .hi-item:hover{border-color:var(--border-hi);background:rgba(255,255,255,.04);}
@@ -193,7 +180,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .gbn-load{text-align:center;padding:14px;color:var(--muted);font-size:12px;}
 .gbn-update-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
 
-/* GBN FS */
 #gbnfs{position:fixed;inset:0;z-index:9990;background:#000;display:none;flex-direction:column;}
 #gbnfs.open{display:flex;}
 .gbnfs-hdr{background:#991b1b;padding:10px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
@@ -202,7 +188,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .gbnfs-body{flex:1;position:relative;}
 .gbnfs-body iframe{width:100%;height:100%;border:none;position:absolute;inset:0;}
 
-/* TASKS */
 .qwl{display:flex;flex-direction:column;gap:5px;}
 .qw-item{display:flex;align-items:center;gap:7px;padding:8px 11px;background:var(--raised);border:1px solid var(--border);border-radius:7px;}
 .qw-item.done{opacity:.5;}
@@ -216,7 +201,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .qw-in{flex:1;padding:8px 11px;background:var(--raised);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;outline:none;}
 .qw-in::placeholder{color:#252b38;}
 
-/* URGENT TASKS */
 .ugl{display:flex;flex-direction:column;gap:6px;}
 .ug-item{display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.28);border-left:3px solid var(--red);border-radius:7px;}
 .ug-item.done{opacity:.45;background:var(--raised);border-color:var(--border);border-left-color:var(--muted);}
@@ -241,7 +225,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .ug-empty{font-size:12px;color:#252b38;text-align:center;padding:10px 0;font-style:italic;}
 .ug-count-badge{font-size:11px;font-weight:700;color:#f87171;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);padding:3px 9px;border-radius:20px;}
 
-/* NOTES */
 .notes-tabs-row{display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
 .ntab{padding:5px 12px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;transition:all .2s;}
 .ntab.on{color:var(--text);border-color:var(--border-hi);background:rgba(255,255,255,.06);}
@@ -252,7 +235,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .note-del-btn{font-size:11px;color:var(--muted);cursor:pointer;padding:3px 7px;border:1px solid var(--border);border-radius:5px;background:transparent;font-family:'Outfit',sans-serif;transition:all .2s;}
 .note-del-btn:hover{color:var(--red);border-color:rgba(239,68,68,.35);}
 
-/* WORLD CUP */
 .wc-today-list{display:flex;flex-direction:column;gap:5px;}
 .wcm{display:flex;align-items:center;gap:10px;padding:10px 13px;background:var(--raised);border:1px solid var(--border);border-radius:10px;}
 .wcm.eng{background:rgba(220,38,38,.07);border-color:rgba(220,38,38,.28);}
@@ -272,13 +254,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 .wc-no-matches{padding:16px;text-align:center;font-size:13px;color:var(--muted);font-style:italic;}
 @media(max-width:768px){.wcven{display:none;}}
 
-/* ENG BOX */
 .eng-box{padding:10px 13px;background:var(--raised);border:1px solid rgba(220,38,38,.28);border-radius:9px;margin-bottom:7px;}
 .eng-lbl{font-size:10px;color:var(--muted);margin-bottom:2px;}
 .eng-match{font-size:13px;font-weight:600;color:var(--text);margin-bottom:1px;}
 .eng-info{font-size:11px;color:var(--muted);}
 
-/* FOOTER */
 footer{margin-top:32px;padding:13px 26px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin-left:auto;margin-right:auto;flex-wrap:wrap;gap:8px;}
 .footer-logo img{height:26px;filter:brightness(0) invert(1);}
 .ft{font-size:11px;color:var(--muted);}
@@ -350,6 +330,8 @@ footer{margin-top:32px;padding:13px 26px;border-top:1px solid var(--border);disp
   <!-- HOLIDAYS -->
   <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:12px;color:var(--text);">&#x2708;&#xFE0F; Upcoming Trips</div>
   <div class="hgrid">
+
+    <!-- ALBUFEIRA -->
     <div class="hcard">
       <img class="hcard-img" src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/revision/refs/heads/main/5bced3ec.webp" alt="Albufeira">
       <div class="hcard-ov"></div>
@@ -361,6 +343,8 @@ footer{margin-top:32px;padding:13px 26px;border-top:1px solid var(--border);disp
         <div class="hnums" id="h-alb"></div>
       </div>
     </div>
+
+    <!-- MENORCA -->
     <div class="hcard">
       <img class="hcard-img" src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/revision/refs/heads/main/piscina-exterior.jpg" alt="Menorca">
       <div class="hcard-ov"></div>
@@ -372,6 +356,20 @@ footer{margin-top:32px;padding:13px 26px;border-top:1px solid var(--border);disp
         <div class="hnums" id="h-men"></div>
       </div>
     </div>
+
+    <!-- IRELAND -->
+    <div class="hcard">
+      <img class="hcard-img" src="https://www.cliffsofmoher.ie/wp-content/uploads/2026/04/14-677x846.png" alt="Wild Atlantic Way">
+      <div class="hcard-ov"></div>
+      <div class="hdest-badge">Wild Atlantic Way &bull; Ireland</div>
+      <div class="hcard-cnt">
+        <div class="hcard-tag">&#x1F3DE;&#xFE0F; Road Trip</div>
+        <div class="hcard-name">Wild Atlantic Way</div>
+        <div class="hcard-dates">24 &ndash; 27 Aug 2026</div>
+        <div class="hnums" id="h-ire"></div>
+      </div>
+    </div>
+
   </div>
 
   <!-- STAT CARDS -->
@@ -426,7 +424,7 @@ footer{margin-top:32px;padding:13px 26px;border-top:1px solid var(--border);disp
           <button class="btn-p" onclick="addCt()">+ Add</button>
         </div>
         <div style="padding:0 20px 16px;">
-          <textarea class="tnote" id="tn-area" placeholder="Notes for tomorrow &mdash; talking points, follow-ups, ideas..."></textarea>
+          <textarea class="tnote" id="tn-area" placeholder="Notes for tomorrow..."></textarea>
           <div class="sv-lbl" id="tn-sv">Auto-saved</div>
         </div>
       </div>
@@ -450,7 +448,7 @@ footer{margin-top:32px;padding:13px 26px;border-top:1px solid var(--border);disp
         </div>
       </div>
 
-      <!-- NOTES — custom sections -->
+      <!-- NOTES -->
       <div class="card" style="margin-bottom:18px;">
         <div class="card-hdr"><div class="card-title">&#x1F4CB; Notes</div><div class="sv-lbl" id="gn-sv">Auto-saved</div></div>
         <div class="card-body">
@@ -536,7 +534,6 @@ footer{margin-top:32px;padding:13px 26px;border-top:1px solid var(--border);disp
 </footer>
 
 <script>
-/* AUTO-RESIZE TEXTAREAS */
 function autoResize(el) {
   if (!el) return;
   el.style.height = 'auto';
@@ -692,7 +689,6 @@ function timeAgo(ts) {
   if (d < 1440) return Math.floor(d/60)+'h ago'; return Math.floor(d/1440)+'d ago';
 }
 
-/* LIVE CLOCK BST — uses Intl.DateTimeFormat parts (locale-string round-trip via Date() is unreliable) */
 function tickClock() {
   var now = new Date();
   var parts = new Intl.DateTimeFormat('en-GB', {
@@ -710,7 +706,6 @@ function tickClock() {
   if (el) el.textContent = h + ':' + m + ':' + s;
 }
 
-/* NAV DATE */
 function setNavDate() {
   var d = new Date();
   var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -726,20 +721,24 @@ function setNavDate() {
 function rdHols() {
   var now = new Date();
   var trips = [
+    { id:'ire', s: new Date('2026-08-24T06:00:00'), e: new Date('2026-08-27T23:59:59') },
     { id:'alb', s: new Date('2026-07-12T00:00:00'), e: new Date('2026-07-18T23:59:59') },
     { id:'men', s: new Date('2026-07-28T00:00:00'), e: new Date('2026-08-03T23:59:59') }
   ];
   trips.forEach(function(trip) {
     var el = document.getElementById('h-' + trip.id);
     if (!el) return;
-    if (now >= trip.s && now <= trip.e) {
+    /* Already on the trip (only applies when end date is known) */
+    if (trip.e && now >= trip.s && now <= trip.e) {
       el.innerHTML = '<div class="haway">You\'re there right now!</div>';
       return;
     }
-    if (now > trip.e) {
+    /* Trip complete (only when end date is known) */
+    if (trip.e && now > trip.e) {
       el.innerHTML = '<div class="hcomplete">Trip complete</div>';
       return;
     }
+    /* Countdown */
     var diff = trip.s - now;
     var days = Math.floor(diff/864e5);
     var hrs = Math.floor((diff%864e5)/36e5);
@@ -777,7 +776,7 @@ function rdWC() {
   c.innerHTML = html;
 }
 
-/* GBN HEADLINES — parse from RSS feed items in page context */
+/* GBN HEADLINES */
 var GBN_ITEMS = [
   {title:"Councillors vote to ban fireworks on Bonfire night across Scottish capital",link:"https://www.gbnews.com/news/edinburgh-news-councillors-ban-fireworks-bonfire-night",img:"https://assets.rbl.ms/62650454/origin.png",pubDate:1749498412000},
   {title:"Major British supermarket opens four new sites and refurbishing six more in latest expansion move",link:"https://www.gbnews.com/money/major-british-supermarket-opens-four-new-sites-and-refurbishing-six-more-in-latest-expansion-move",img:"https://assets.rbl.ms/66887814/origin.jpg",pubDate:1749498264000},
@@ -984,7 +983,7 @@ function rdQW() {
   S.tasks.forEach(function(t){var d=document.createElement('div');d.className='qw-item'+(t.done?' done':'');d.innerHTML='<div class="qw-chk" onclick="togQW(\''+t.id+'\')">'+(t.done?'&#x2713;':'')+'</div><div class="qw-txt" onclick="togQW(\''+t.id+'\')">'+t.text+'</div><div class="qw-del" onclick="delQW(\''+t.id+'\')">&#xD7;</div>';c.appendChild(d);});
 }
 
-/* URGENT TASKS — separate priority list, always sorted with undone-first */
+/* URGENT TASKS */
 function addUG() {
   var t = (document.getElementById('ug-in').value || '').trim(); if (!t) return;
   var maxOrder = S.urgent.reduce(function(m,x){ return Math.max(m, x.order || 0); }, 0);
@@ -995,7 +994,6 @@ function addUG() {
 function togUG(id) { var u=S.urgent.find(function(x){return x.id===id;}); if(u){u.done=!u.done;save();rdUG();} }
 function delUG(id) { S.urgent=S.urgent.filter(function(x){return x.id!==id;}); save(); rdUG(); }
 function moveUG(id, dir) {
-  /* dir: -1 = up (higher priority), 1 = down (lower priority) */
   var sorted = S.urgent.slice().sort(function(a,b){ return (a.order||0)-(b.order||0); });
   var idx = sorted.findIndex(function(x){ return x.id===id; });
   var swapIdx = idx + dir;
@@ -1010,10 +1008,9 @@ function rdUG() {
   var openCount = S.urgent.filter(function(x){return !x.done;}).length;
   if (badge) badge.textContent = openCount + (openCount === 1 ? ' urgent' : ' urgent');
   if (!S.urgent.length) {
-    c.innerHTML = '<div class="ug-empty">No urgent tasks — nice and clear &#x1F389;</div>';
+    c.innerHTML = '<div class="ug-empty">No urgent tasks &mdash; nice and clear &#x1F389;</div>';
     return;
   }
-  /* Manual rank order — lowest order value = top priority. Ties broken by newest first. */
   var sorted = S.urgent.slice().sort(function(a, b) {
     var ao = a.order || 0, bo = b.order || 0;
     if (ao !== bo) return ao - bo;
@@ -1032,7 +1029,7 @@ function rdUG() {
   });
 }
 
-/* NOTES — custom sections */
+/* NOTES */
 var gnT = {};
 function rdNotes() {
   var tabsRow = document.getElementById('ntabs-row');
@@ -1041,13 +1038,11 @@ function rdNotes() {
   tabsRow.innerHTML = '';
   panels.innerHTML = '';
   S.notes.forEach(function(note) {
-    /* Tab */
     var btn = document.createElement('button');
     btn.className = 'ntab' + (S.activeNote === note.id ? ' on' : '');
     btn.textContent = note.label;
     btn.onclick = function() { S.activeNote = note.id; save(); rdNotes(); };
     tabsRow.appendChild(btn);
-    /* Panel */
     var panel = document.createElement('div');
     panel.style.display = S.activeNote === note.id ? 'block' : 'none';
     var delBtn = S.notes.length > 1 ? '<button class="note-del-btn" onclick="delNote(\'' + note.id + '\')">Delete section</button>' : '';
@@ -1055,7 +1050,6 @@ function rdNotes() {
       + '<textarea class="gna" id="gna-' + note.id + '" placeholder="Notes for ' + note.label + '..." oninput="svNote(\'' + note.id + '\')">' + escH(note.content || '') + '</textarea>';
     panels.appendChild(panel);
   });
-  /* Add section button */
   var addBtn = document.createElement('button');
   addBtn.className = 'ntab-add';
   addBtn.textContent = '+ New section';
