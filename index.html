@@ -262,6 +262,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:400;height:60px;display:flex;ali
 footer{margin-top:32px;padding:13px 26px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin-left:auto;margin-right:auto;flex-wrap:wrap;gap:8px;}
 .footer-logo img{height:26px;filter:brightness(0) invert(1);}
 .ft{font-size:11px;color:var(--muted);}
+.footer-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.btn-backup{padding:6px 12px;background:rgba(37,99,235,.12);border:1px solid rgba(37,99,235,.3);border-radius:6px;color:var(--accent-hi);font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;cursor:pointer;}
+.btn-backup:hover{background:rgba(37,99,235,.2);}
 .freset{font-size:11px;color:#333;cursor:pointer;text-decoration:underline;}
 .freset:hover{color:var(--red);}
 @media(max-width:768px){nav{padding:0 13px;}.page{padding-left:13px;padding-right:13px;padding-top:68px;}.nav-clock{font-size:15px;}}
@@ -530,7 +533,12 @@ footer{margin-top:32px;padding:13px 26px;border-top:1px solid var(--border);disp
 <footer id="main-footer" style="display:none;">
   <div class="footer-logo"><img src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/asset/refs/heads/main/Franks_Media__1_-removebg-preview.png" alt=""></div>
   <span class="ft">Franks Media &middot; Business Dashboard</span>
-  <span class="freset" onclick="if(confirm('Reset all data?')){localStorage.removeItem('fmbiz5');location.reload();}">Reset all data</span>
+  <div class="footer-tools">
+    <button class="btn-backup" onclick="exportData()">&#x2B07; Export backup</button>
+    <button class="btn-backup" onclick="document.getElementById('import-file').click()">&#x2B06; Import backup</button>
+    <input type="file" id="import-file" accept="application/json,.json" style="display:none;" onchange="importData(this)">
+    <span class="freset" onclick="if(confirm('Reset all data?')){localStorage.removeItem('fmbiz5');location.reload();}">Reset all data</span>
+  </div>
 </footer>
 
 <script>
@@ -661,6 +669,37 @@ function save() {
     var el = document.getElementById('nav-saved');
     if (el) { el.textContent = 'Saved'; el.classList.add('ok'); setTimeout(function(){ el.textContent='Auto-saving'; el.classList.remove('ok'); }, 1200); }
   }, 500);
+}
+
+/* BACKUP: export / import the full dashboard so it moves between devices and browsers */
+function exportData() {
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {}
+  var data = localStorage.getItem(KEY) || JSON.stringify(S);
+  var blob = new Blob([data], {type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  var d = new Date();
+  a.href = url;
+  a.download = 'franks-media-crm-' + d.getFullYear() + zp(d.getMonth()+1) + zp(d.getDate()) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+}
+function importData(input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var parsed;
+    try { parsed = JSON.parse(e.target.result); }
+    catch(err) { alert('That file could not be read. Make sure it is a backup exported from this dashboard.'); input.value=''; return; }
+    if (!parsed || typeof parsed !== 'object') { alert('That file is not a valid dashboard backup.'); input.value=''; return; }
+    if (!confirm('Import this backup? It will replace everything currently saved on this device.')) { input.value=''; return; }
+    try { localStorage.setItem(KEY, JSON.stringify(parsed)); } catch(err) { alert('Could not save the imported data to this browser.'); input.value=''; return; }
+    location.reload();
+  };
+  reader.readAsText(file);
 }
 
 function checkPw() {
