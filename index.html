@@ -94,7 +94,7 @@ $('ex-log-export').onclick=()=>dl(JSON.stringify({exportedAt:new Date().toISOStr
 let hooked=false;const hook=setInterval(()=>{if(hooked||!window.fmOsMap)return;hooked=true;clearInterval(hook);window.fmOsMap.on('click',e=>{const {lat,lng}=e.latlng;$('ex-lat').value=lat.toFixed(5);$('ex-lon').value=lng.toFixed(5);$('ex-a-lat').value=lat.toFixed(5);$('ex-a-lon').value=lng.toFixed(5)})},800);setTimeout(()=>clearInterval(hook),60000);
 })();
 </script>
-</body> tag in your existing index.html. -->
+-->
 <script>
 /* Franks Media OSINT integrated module. */
 (function(){
@@ -305,4 +305,37 @@ $('fm-cam-add').onclick=()=>{const raw=$('fm-cam-yt').value.trim();let id='';try
 function initMap(){if(!window.L){$('fm-camera-map').textContent='Map library unavailable. Camera links and favourites still work.';render();return}map=L.map('fm-camera-map',{scrollWheelZoom:false}).setView([53.72,-1.72],7);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);render();setTimeout(()=>map.invalidateSize(),350)}
 if(window.L)initMap();else{let tries=0;const t=setInterval(()=>{if(window.L){clearInterval(t);initMap()}else if(++tries>25){clearInterval(t);initMap()}},400)}render();
 })();
-</script></body></html>
+</script>
+<style>
+/* Separate OSINT workspace: the original business dashboard stays the default view. */
+#fm-workspace-tabs{display:flex;gap:8px;margin:0 0 18px;position:sticky;top:65px;z-index:180;background:#07080af2;padding:10px 0;border-bottom:1px solid var(--border)}
+#fm-workspace-tabs button{border:1px solid var(--border-hi);border-radius:10px;background:var(--raised);color:var(--text);padding:11px 18px;font-weight:700;min-height:44px}
+#fm-workspace-tabs button[aria-selected="true"]{background:#1d3d77;border-color:#60a5fa;color:white}
+#fm-osint-workspace{display:none}#fm-osint-workspace.active{display:block}#fm-dashboard-workspace.inactive{display:none}
+#fm-osint-workspace>section{margin-top:14px}#fm-osint-workspace #fm-extra-osint{max-width:none;padding-left:0;padding-right:0}
+@media(max-width:600px){#fm-workspace-tabs{top:58px}#fm-workspace-tabs button{flex:1}}
+</style>
+<script>
+(function(){
+'use strict';
+const main=document.getElementById('main-page');if(!main)return;
+const tabs=document.createElement('div');tabs.id='fm-workspace-tabs';tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','Dashboard sections');
+const dashBtn=document.createElement('button'),osBtn=document.createElement('button');
+dashBtn.type=osBtn.type='button';dashBtn.textContent='▦ Dashboard';osBtn.textContent='◎ OSINT';
+dashBtn.id='fm-dash-tab';osBtn.id='fm-osint-tab';dashBtn.setAttribute('role','tab');osBtn.setAttribute('role','tab');
+const dash=document.createElement('div'),os=document.createElement('div');dash.id='fm-dashboard-workspace';os.id='fm-osint-workspace';dash.setAttribute('role','tabpanel');os.setAttribute('role','tabpanel');
+while(main.firstChild)dash.appendChild(main.firstChild);
+tabs.append(dashBtn,osBtn);main.append(tabs,dash,os);
+const ids=new Set(['fm-osint','fm-intel','fm-more','fm-extra-osint','fm-camera-hub']);
+function collect(){for(const id of ids){const el=document.getElementById(id);if(el&&el.parentElement!==os)os.appendChild(el)}}
+collect();
+let current='dashboard';
+function show(view){collect();current=view;const isOs=view==='osint';dash.classList.toggle('inactive',isOs);os.classList.toggle('active',isOs);dashBtn.setAttribute('aria-selected',String(!isOs));osBtn.setAttribute('aria-selected',String(isOs));dashBtn.tabIndex=isOs?-1:0;osBtn.tabIndex=isOs?0:-1;
+if(isOs){setTimeout(()=>{for(const map of [window.fmOsMap,window.fmCameraMap]){if(map&&typeof map.invalidateSize==='function')map.invalidateSize()}window.dispatchEvent(new Event('resize'))},120)}
+}
+dashBtn.onclick=()=>show('dashboard');osBtn.onclick=()=>show('osint');
+const observer=new MutationObserver(()=>{let needs=false;for(const id of ids){const el=document.getElementById(id);if(el&&el.parentElement!==os){needs=true;break}}if(needs)collect()});observer.observe(document.body,{childList:true,subtree:true});
+show('dashboard');
+})();
+</script>
+</body></html>
