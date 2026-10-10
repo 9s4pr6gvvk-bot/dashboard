@@ -121,4 +121,46 @@ const js=document.createElement('script');js.src='https://unpkg.com/leaflet@1.9.
 
 </script>
 
+<style>
+#fm-intel{margin:18px 0;color:#f0ede8;font-family:Outfit,system-ui,sans-serif}#fm-intel *{box-sizing:border-box}#fm-intel .intel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}#fm-intel .intel-card{background:#0f1114;border:1px solid #ffffff1a;border-radius:14px;padding:16px;min-width:0}#fm-intel h2{font:800 18px Syne,sans-serif;margin:0 0 12px}#fm-intel h3{font:700 14px Syne,sans-serif;margin:0 0 10px}#fm-intel .intel-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}#fm-intel input{flex:1;min-width:130px;background:#161a1f;color:#fff;border:1px solid #ffffff35;border-radius:8px;padding:11px;font-size:16px}#fm-intel button{background:#2563eb;border:0;color:white;border-radius:8px;padding:11px;font-size:13px;cursor:pointer;min-height:42px}#fm-intel .intel-muted{color:#9ca3af;font-size:12px;line-height:1.5}#fm-intel .intel-metric{display:inline-block;background:#161a1f;border:1px solid #ffffff16;border-radius:9px;padding:11px;margin:4px 5px 4px 0;vertical-align:top}#fm-intel .intel-metric b{display:block;font-size:18px}#fm-intel .intel-metric small{color:#9ca3af}#fm-intel .intel-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#fm-intel .intel-links a{padding:11px;background:#161a1f;border:1px solid #ffffff20;border-radius:9px;color:#93c5fd;text-decoration:none;font-size:13px;overflow-wrap:anywhere}#fm-intel .intel-links a small{display:block;color:#9ca3af;margin-top:4px;font-size:11px}#fm-intel .intel-status{font-size:12px;color:#a7f3d0;margin:7px 0}#fm-intel .intel-error{color:#fca5a5}#fm-intel details summary{cursor:pointer;font-weight:700}#fm-intel .intel-map-tip{color:#fbbf24;font-size:12px}@media(max-width:700px){#fm-intel .intel-grid{grid-template-columns:1fr}#fm-intel .intel-links{grid-template-columns:1fr}}
+</style>
+<script>
+/* Independent static-hosting OSINT extras. No user coordinates are transmitted until search or selection. */
+(()=>{'use strict';
+const anchor=document.getElementById('fm-osint');
+if(!anchor||document.getElementById('fm-intel'))return;
+const sec=document.createElement('section');sec.id='fm-intel';sec.setAttribute('aria-label','OSINT intelligence tools');
+sec.innerHTML=`<h2>🛰️ OSINT Intelligence Tools</h2><div class="intel-grid">
+<div class="intel-card"><h3>🌦️ Location weather & air quality</h3><p class="intel-muted">Search a place or tap the OSINT map to inspect forecast-model conditions. Data is not a live weather radar or sensor reading.</p><div class="intel-row"><input id="intel-place" placeholder="Search city or town…" aria-label="Search place"><button id="intel-search">Search</button><button id="intel-here">West Yorkshire</button></div><p id="intel-selected" class="intel-status">Select a location to load conditions.</p><div id="intel-weather" class="intel-muted"></div><div id="intel-air" class="intel-muted"></div><p class="intel-muted">Weather and air-quality model: Open-Meteo · Attribution CC BY 4.0. Non-commercial free-tier conditions apply.</p></div>
+<div class="intel-card"><h3>🌐 Specialist live-data services</h3><p class="intel-muted">These open external services. They are <b>not</b> tracked inside this dashboard.</p><div class="intel-links">
+<a href="https://globe.adsbexchange.com/" target="_blank" rel="noopener noreferrer">✈️ Aircraft positions<small>ADS-B Exchange · coverage varies</small></a>
+<a href="https://www.flightradar24.com/" target="_blank" rel="noopener noreferrer">🛫 Civil aviation<small>Flightradar24 · external live map</small></a>
+<a href="https://www.marinetraffic.com/" target="_blank" rel="noopener noreferrer">🚢 Ship tracking<small>MarineTraffic · AIS coverage varies</small></a>
+<a href="https://www.n2yo.com/" target="_blank" rel="noopener noreferrer">🛰️ Satellites<small>N2YO · orbital predictions</small></a>
+<a href="https://firms.modaps.eosdis.nasa.gov/map/" target="_blank" rel="noopener noreferrer">🔥 Active fire detections<small>NASA FIRMS · satellite detections</small></a>
+<a href="https://www.gdacs.org/" target="_blank" rel="noopener noreferrer">⚠️ Disaster alerts<small>GDACS · global alerts</small></a>
+<a href="https://www.ventusky.com/" target="_blank" rel="noopener noreferrer">🌧️ Weather maps<small>Ventusky · external weather layers</small></a>
+<a href="https://liveuamap.com/" target="_blank" rel="noopener noreferrer">🗺️ Conflict reports<small>Liveuamap · third-party reports, verify</small></a>
+<a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener noreferrer">🔐 Exploited CVEs<small>CISA · cyber vulnerability catalogue</small></a>
+<a href="https://www.windy.com/" target="_blank" rel="noopener noreferrer">💨 Wind and storms<small>Windy · external forecast maps</small></a>
+</div></div></div>`;
+anchor.insertAdjacentElement('afterend',sec);
+const $=id=>document.getElementById(id);let request=0;
+const metric=(label,value)=>{const d=document.createElement('span');d.className='intel-metric';const b=document.createElement('b');b.textContent=value;const sm=document.createElement('small');sm.textContent=label;d.append(b,sm);return d};
+const valid=(lat,lon)=>Number.isFinite(lat)&&Number.isFinite(lon)&&Math.abs(lat)<=90&&Math.abs(lon)<=180;
+const getJSON=async(url)=>{const controller=new AbortController();const t=setTimeout(()=>controller.abort(),12000);try{const r=await fetch(url,{signal:controller.signal});if(!r.ok)throw Error('HTTP '+r.status);return await r.json()}finally{clearTimeout(t)}};
+async function conditions(lat,lon,label){if(!valid(lat,lon))return;const id=++request;$('intel-selected').textContent='Loading '+label+' ('+lat.toFixed(3)+', '+lon.toFixed(3)+')…';$('intel-weather').replaceChildren();$('intel-air').replaceChildren();
+const qs='latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lon);
+const weather='https://api.open-meteo.com/v1/forecast?'+qs+'&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,wind_speed_10m,weather_code&timezone=auto';
+const air='https://air-quality-api.open-meteo.com/v1/air-quality?'+qs+'&current=european_aqi,pm2_5,pm10,us_aqi&timezone=auto';
+const results=await Promise.allSettled([getJSON(weather),getJSON(air)]);if(id!==request)return;
+$('intel-selected').textContent=label+' · '+lat.toFixed(3)+', '+lon.toFixed(3)+' · checked '+new Date().toLocaleTimeString('en-GB');
+const w=results[0];if(w.status==='fulfilled'&&w.value.current){const c=w.value.current,box=$('intel-weather');box.append(metric('Temperature',c.temperature_2m??'—'),metric('Feels like',c.apparent_temperature??'—'),metric('Humidity',(c.relative_humidity_2m??'—')+'%'),metric('Wind',(c.wind_speed_10m??'—')+' km/h'),metric('Precipitation',(c.precipitation??'—')+' mm'));const p=document.createElement('p');p.textContent='Model valid: '+(c.time||'unknown')+' · Weather code '+(c.weather_code??'unknown');box.append(p)}else{$('intel-weather').textContent='Weather unavailable: '+(w.status==='rejected'?w.reason.message:'Missing current conditions');$('intel-weather').classList.add('intel-error')}
+const a=results[1];if(a.status==='fulfilled'&&a.value.current){const c=a.value.current,box=$('intel-air');box.append(metric('European AQI',c.european_aqi??'—'),metric('US AQI',c.us_aqi??'—'),metric('PM2.5',(c.pm2_5??'—')+' µg/m³'),metric('PM10',(c.pm10??'—')+' µg/m³'));const p=document.createElement('p');p.textContent='Air-quality model valid: '+(c.time||'unknown');box.append(p)}else{$('intel-air').textContent='Air quality unavailable: '+(a.status==='rejected'?a.reason.message:'Missing current conditions');$('intel-air').classList.add('intel-error')}
+}
+async function search(){const q=$('intel-place').value.trim().slice(0,100);if(!q)return;$('intel-selected').textContent='Searching…';try{const data=await getJSON('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(q)+'&count=1&language=en&format=json');const p=data.results?.[0];if(!p||!valid(p.latitude,p.longitude))throw Error('No matching place');if(window.fmOsMap)window.fmOsMap.setView([p.latitude,p.longitude],8);conditions(p.latitude,p.longitude,[p.name,p.admin1,p.country].filter(Boolean).join(', '))}catch(e){$('intel-selected').textContent='Search unavailable: '+e.message}}
+$('intel-search').onclick=search;$('intel-place').addEventListener('keydown',e=>{if(e.key==='Enter')search()});$('intel-here').onclick=()=>{if(window.fmOsMap)window.fmOsMap.setView([53.65,-1.78],8);conditions(53.65,-1.78,'West Yorkshire')};
+let wired=false;const watch=setInterval(()=>{if(wired||!window.fmOsMap)return;wired=true;clearInterval(watch);window.fmOsMap.on('click',e=>conditions(e.latlng.lat,e.latlng.lng,'Selected map point'))},700);setTimeout(()=>clearInterval(watch),60000);
+})();
+</script>
 </body></html>
