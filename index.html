@@ -1379,12 +1379,13 @@ if(window.L)initMap();else{let tries=0;const t=setInterval(()=>{if(window.L){cle
 </script>
 <style>
 /* Separate OSINT workspace: the original business dashboard stays the default view. */
-#fm-workspace-tabs{display:flex;gap:8px;margin:0 0 18px;position:sticky;top:65px;z-index:180;background:#07080af2;padding:10px 0;border-bottom:1px solid var(--border)}
+#fm-workspace-tabs{display:flex;gap:8px;position:fixed;top:60px;left:0;right:0;z-index:300;background:#07080af9;backdrop-filter:blur(24px);padding:10px 26px;border-bottom:1px solid var(--border)}
 #fm-workspace-tabs button{border:1px solid var(--border-hi);border-radius:10px;background:var(--raised);color:var(--text);padding:11px 18px;font-weight:700;min-height:44px}
 #fm-workspace-tabs button[aria-selected="true"]{background:#1d3d77;border-color:#60a5fa;color:white}
+#fm-dashboard-workspace,#fm-osint-workspace{margin-top:64px}
 #fm-osint-workspace{display:none}#fm-osint-workspace.active{display:block}#fm-dashboard-workspace.inactive{display:none}
 #fm-osint-workspace>section{margin-top:14px}#fm-osint-workspace #fm-extra-osint{max-width:none;padding-left:0;padding-right:0}
-@media(max-width:600px){#fm-workspace-tabs{top:58px}#fm-workspace-tabs button{flex:1}}
+@media(max-width:768px){#fm-workspace-tabs{top:58px;padding:8px 13px}#fm-dashboard-workspace,#fm-osint-workspace{margin-top:58px}#fm-workspace-tabs button{flex:1}}
 </style>
 <script>
 (function(){
